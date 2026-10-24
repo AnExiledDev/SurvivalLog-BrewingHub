@@ -45,6 +45,35 @@ Built against BepInEx `6.0.0-be.788`.
 
 Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.1 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
+## Known issues
+
+- The "Brew again when collected" switch is not saved: it turns off when you leave the game.
+- The Barrels tab can collect a finished barrel but cannot fill or start one; open that barrel to do so.
+
 ## Feedback and bug reports
 
 Found a bug, have an idea, or something feels off? Come say so on the Core Directive Discord: https://discord.gg/trTsyxUFqg . When reporting a bug, attach `BepInEx\LogOutput.log` and, if you turned on `LogToFile`, `BepInEx\brewing-hub.log`.
+
+To reach me directly, message `exiled.dev` on Discord; you can find me in the [official Survival Log Discord](https://discord.gg/MZGg4gQAUe). I'm also on X as [@AnExiledDev](https://x.com/AnExiledDev).
+
+Check out my [Survival Log wiki](https://sldb.core-directive.com/en/) for items, crafting, maps and more.
+
+## Build
+
+This is a BepInEx 6 IL2CPP plugin. It compiles against BepInEx and the game's IL2CPP interop assemblies, so a game install with BepInEx set up and started once is required. Those assemblies come from the game and are not part of this repo. The .NET 8 SDK is required.
+
+```
+dotnet build src/BrewingHub -c Release -p:GameDir="C:\path\to\Survival Log"
+```
+
+`GameDir` is the game folder. The default in the project file is a local path you will almost certainly need to override. Compiling also needs Exiled's Toolkit 0.4.0 or newer: point `-p:ToolkitDll="C:\path\to\ExiledToolkit.dll"` at its DLL. Players don't need the Toolkit to run the mod. The output DLL is at `src\BrewingHub\bin\Release\BrewingHub.dll`.
+
+The unit tests cover the brewing math, the planner and the page script, and need nothing from the game:
+
+```
+dotnet test tests/BrewingHub.Tests
+```
+
+## License
+
+MIT. Copyright (c) 2026 AnExiledDev. See [LICENSE](LICENSE).
