@@ -2,7 +2,7 @@
 
 ## 0.1.2
 
-- Load no longer says the barrel is filled when a stack that could not be split put in more food than planned. It tells you to check the barrel instead, and "Load and start" does not start.
+- Load no longer over-fills the barrel when a stack cannot be split. It moves what fits and says how much went in, and Collect and brew again does not start the barrel.
 - With PutBottlesAway on, the message now counts the bottles that actually moved, and the setting's description says every bottle of that drink in your bag is moved.
 - Keys work again if the brewing screen closes while you are typing in a search box.
 
