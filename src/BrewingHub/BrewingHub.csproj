@@ -46,6 +46,7 @@
     <AssemblyMetadata Include="ModManager.GameVersion" Value="1.1.19611" />
     <AssemblyMetadata Include="ModManager.Settings" Value="Restart" />
     <AssemblyMetadata Include="ModManager.GitHub" Value="AnExiledDev/SurvivalLog-BrewingHub" />
+    <AssemblyMetadata Include="ModManager.NexusId" Value="93" />
     <AssemblyMetadata Include="ModManager.Changelog" Value="https://github.com/AnExiledDev/SurvivalLog-BrewingHub/blob/main/CHANGELOG.md" />
   </ItemGroup>
 
