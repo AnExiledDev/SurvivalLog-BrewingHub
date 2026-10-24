@@ -47,6 +47,9 @@ internal sealed class FakeGame : IBrewGame
 
     public bool RefusesMoves { get; set; }
 
+    /// <summary>The game moves the whole stack even when the base reports it can split one off.</summary>
+    public bool MovesWholeStacks { get; set; }
+
     public bool RefusesStart { get; set; }
 
     public string? CollectBlocked { get; set; }
@@ -89,7 +92,7 @@ internal sealed class FakeGame : IBrewGame
 
         if (RefusesMoves || stack == null || units <= 0) return 0;
 
-        var n = CanSplit ? Math.Min(units, stack.Count) : stack.Count;
+        var n = CanSplit && !MovesWholeStacks ? Math.Min(units, stack.Count) : stack.Count;
         var index = source.IndexOf(stack);
 
         if (n >= stack.Count) source.RemoveAt(index);

@@ -11,7 +11,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a fourth colu
 - **Ingredients**: every brewable food with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more lift the barrel to the next drink. Search, filter by raw food or food you have, and sort by satiety, quality or how many you have. Click a row to put one in the barrel.
 - **Barrels**: every brewing barrel in your base, what it is brewing, the time left, and a Collect button on finished ones.
 - **Collect and brew again**: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken, by any means. The switch lasts until you leave the game.
-- **Put bottles away** (setting `PutBottlesAway`, off by default): collected bottles move from your bag to a home storage that already holds that drink.
+- **Put bottles away** (setting `PutBottlesAway`, off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.
 - With Exiled's Toolkit, a barrel finishing and a barrel brewing again show as toasts.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
@@ -43,7 +43,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.1 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.2 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 

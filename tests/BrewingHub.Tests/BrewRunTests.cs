@@ -28,6 +28,25 @@ public class BrewRunTests
     }
 
     [Fact]
+    public void Load_that_moved_more_than_planned_is_not_reported_filled_and_does_not_start()
+    {
+        var game = Stocked();
+
+        game.MovesWholeStacks = true;
+
+        var pressed = BrewRun.Load(game, BarrelA, 2, true, false);
+
+        Assert.False(pressed.IsDone);
+        Assert.Equal("Moved 30 where 23 was planned; check the barrel before brewing.", pressed.Message);
+
+        var again = Stocked();
+
+        again.MovesWholeStacks = true;
+        Assert.False(BrewRun.LoadAndStart(again, BarrelA, 2, true, false).IsDone);
+        Assert.Empty(again.Started);
+    }
+
+    [Fact]
     public void Load_puts_what_is_in_the_barrel_back_in_the_bag_first()
     {
         var game = Stocked();

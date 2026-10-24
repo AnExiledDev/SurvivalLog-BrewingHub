@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+- Load no longer says the barrel is filled when a stack that could not be split put in more food than planned. It tells you to check the barrel instead, and "Load and start" does not start.
+- With PutBottlesAway on, the message now counts the bottles that actually moved, and the setting's description says every bottle of that drink in your bag is moved.
+- Keys work again if the brewing screen closes while you are typing in a search box.
+
 ## 0.1.1
 
 - The brewing screen keeps the same height as food goes in and out of the barrel. The quality line, the one-click changes and the buttons under the barrel now have fixed sizes.

@@ -13,7 +13,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 [*][b]Ingredients[/b]: every brewable food with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more lift the barrel to the next drink. Search, filter and sort. Click a row to put one in the barrel.[/*]
 [*][b]Barrels[/b]: every brewing barrel in your base, what it is brewing, the time left, and a Collect button on finished ones.[/*]
 [*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
-[*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): collected bottles move from your bag to a home storage that already holds that drink.[/*]
+[*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.[/*]
 [/list]
 With Exiled's Toolkit, a barrel finishing and a barrel brewing again show as toasts.
 
@@ -65,11 +65,13 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 [*][b]食材[/b]：每种可酿食材的饱腹、心态、品质、一瓶需要几份、你有多少，以及再加几份能让这桶升到下一种酒。可搜索、筛选和排序。点击一行可放一份进桶。[/*]
 [*][b]酿酒桶[/b]：基地里的所有酿酒桶、正在酿什么、还剩多久，酿好的桶有「取出」按钮。[/*]
 [*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶，并为同一种酒重新装桶、开始酿造。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
-[*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出的酒瓶会从背包移到已经放有这种酒的家中储物里。[/*]
+[*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出一桶酒时，背包里所有这种酒都会移到已经放有这种酒的家中储物里。[/*]
 [/list]
 安装 Exiled's Toolkit 后，酿好的桶和再酿一桶都会弹出提示。
 
 Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，可以随时移除。
+
+支持英文和中文。
 
 [size=5]前置要求[/size]
 [list]
@@ -95,6 +97,7 @@ Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，�
 
 [size=5]反馈[/size]
 发现 bug 或有好点子？欢迎来 [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url] 打个招呼，或在这里留言。报告 bug 时，请附上 [font=Courier New]BepInEx\LogOutput.log[/font]，如果打开了 [font=Courier New]LogToFile[/font]，也请附上 [font=Courier New]BepInEx\brewing-hub.log[/font]。
+想直接联系我，可以在 Discord 上给 [b]exiled.dev[/b] 发消息，我在 [url=https://discord.gg/MZGg4gQAUe]Survival Log 官方 Discord[/url] 里。也可以在 X 上找我：[url=https://x.com/AnExiledDev]@AnExiledDev[/url]。
 也欢迎看看我做的 [url=https://sldb.core-directive.com/zh/]Survival Log 维基[/url]，收录物品、制作、地图等资料。
 
 [size=5]源代码与许可[/size]

@@ -49,10 +49,13 @@ public static class BrewRun
 
         if (plan == null) return new Pressed(false, Texts.NotEnough.Say(isChinese, drink));
 
-        var moved = plan.Takes.Sum(take => game.MoveUnits(take.Stack.InstanceId, take.Stack.OwnerId, furnitureId, take.Units));
+        var moves = plan.Takes.Select(take => (Asked: take.Units, Moved: game.MoveUnits(take.Stack.InstanceId, take.Stack.OwnerId, furnitureId, take.Units))).ToList();
+        var moved = moves.Sum(move => move.Moved);
 
         game.Changed(furnitureId);
 
+        // A move that put in more than asked (a whole stack where one unit was meant) leaves a different drink.
+        if (moves.Any(move => move.Moved > move.Asked)) return new Pressed(false, Texts.Overfilled.Say(isChinese, moved, plan.Units));
         if (moved >= plan.Units) return new Pressed(true, Texts.Filled.Say(isChinese, drink));
 
         return new Pressed(false, Texts.MovedSome.Say(isChinese, moved, plan.Units));

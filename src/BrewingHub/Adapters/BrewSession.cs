@@ -18,7 +18,7 @@ internal sealed class BrewSession
     private readonly IBrewGame _game;
     private readonly WebPage _page;
     private readonly Func<string, bool, bool> _toast;
-    private readonly Func<int, string?> _putAway;
+    private readonly Func<int, (string Place, int Bottles)?> _putAway;
     private readonly Func<bool> _isBrewScreenOpen;
     private readonly WebKeyboard _keyboard = new();
     private readonly Action<string> _log;
@@ -36,7 +36,7 @@ internal sealed class BrewSession
     private readonly Dictionary<long, int> _lastTier = new();
     private readonly Dictionary<long, Barrel> _seen = new();
 
-    public BrewSession(IBrewGame game, WebPage page, Func<string, bool, bool> toast, Func<int, string?> putAway, Func<bool> isBrewScreenOpen, Action<string> log)
+    public BrewSession(IBrewGame game, WebPage page, Func<string, bool, bool> toast, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Action<string> log)
     {
         _game = game;
         _page = page;
@@ -75,6 +75,9 @@ internal sealed class BrewSession
         if (isOpen == _wasScreenOpen) return false;
 
         _wasScreenOpen = isOpen;
+
+        // A closed screen takes its search box with it, and may not say that typing ended.
+        if (!isOpen) _keyboard.Release();
 
         return true;
     }
@@ -268,11 +271,11 @@ internal sealed class BrewSession
     /// <summary>Puts a collected barrel's drink away when that is on; the line to show, or null when nothing moved.</summary>
     private string? StoreBottles(Barrel barrel)
     {
-        if (!_isPuttingAway || barrel.ResultItemId <= 0 || _putAway(barrel.ResultItemId) is not { } place) return null;
+        if (!_isPuttingAway || barrel.ResultItemId <= 0 || _putAway(barrel.ResultItemId) is not { } stored) return null;
 
         var drink = (_sentCatalog ?? Catalog.Empty).Items.TryGetValue(barrel.ResultItemId, out var item) ? item.Name : Texts.Drink.Pick(IsChinese);
 
-        return Texts.BottlesStored.Say(IsChinese, barrel.ResultCount, drink, place);
+        return Texts.BottlesStored.Say(IsChinese, stored.Bottles, drink, stored.Place);
     }
 
     /// <summary>A toast when Exiled's Toolkit can show one, else the page's own line.</summary>

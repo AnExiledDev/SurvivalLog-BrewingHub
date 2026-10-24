@@ -29,6 +29,7 @@ public static class Texts
     public static readonly Phrase NotEnough = new("Not enough fresh food for a barrel of {0}.", "新鲜食材不够酿一桶{0}。");
     public static readonly Phrase EmptyRefused = new("The food in the barrel could not go back to your bag, so nothing was loaded.", "桶里的食材放不回背包，所以没有放入新食材。");
     public static readonly Phrase Filled = new("The barrel is filled for {0}.", "已为{0}装好酿酒桶。");
+    public static readonly Phrase Overfilled = new("Moved {0} where {1} was planned; check the barrel before brewing.", "放入了 {0} 份，计划是 {1} 份，开酿前请检查酿酒桶。");
     public static readonly Phrase MovedSome = new("Moved {0} of {1}; the game refused the rest.", "已放入 {0}/{1} 份，其余被游戏拒绝。");
     public static readonly Phrase NoneLeft = new("No fresh {0} left.", "没有新鲜的{0}了。");
     public static readonly Phrase MoveRefused = new("The game refused to move that.", "游戏拒绝了这次移动。");

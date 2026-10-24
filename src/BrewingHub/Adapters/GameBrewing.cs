@@ -80,7 +80,15 @@ internal sealed class GameBrewing : IBrewGame
 
             if (one == null)
             {
-                if (QuickMove(items, current, fromOwnerId, toOwnerId)) moved += count;
+                // The quick move takes the whole stack; never put in more than was asked.
+                if (count > units - moved)
+                {
+                    _log($"stack {current} holds {count}, more than the {units - moved} asked, and cannot be split");
+
+                    break;
+                }
+
+                if (QuickMove(items, current, fromOwnerId, toOwnerId)) moved += count - LeftIn(items, current, fromOwnerId);
 
                 break;
             }
@@ -100,6 +108,10 @@ internal sealed class GameBrewing : IBrewGame
 
         return moved;
     });
+
+    /// <summary>What is still in the source after a move: a quick move can be cut short by another mod.</summary>
+    private static int LeftIn(ItemManager items, long instanceId, long ownerId) =>
+        items.GetItemData(instanceId) is { ItemCount: > 0 } item && item.OwnerId == ownerId ? item.ItemCount : 0;
 
     /// <summary>Furniture.OnBrewStart, what the screen's start button ends in. False when the game refused.</summary>
     public bool Start(long furnitureId) => Press("start", () =>
@@ -160,10 +172,11 @@ internal sealed class GameBrewing : IBrewGame
     }
 
     /// <summary>
-    /// Bottles in the bag go to a home storage that already holds that drink, so a collected barrel ends up beside the
-    /// earlier ones. Returns the place they went, or null when none holds it or the game refused.
+    /// Every bottle of the drink in the bag goes to a home storage that already holds that drink, so a collected barrel
+    /// ends up beside the earlier ones. Returns the place and how many bottles went, or null when none holds it or the
+    /// game refused.
     /// </summary>
-    public string? PutAway(int drinkId)
+    public (string Place, int Bottles)? PutAway(int drinkId)
     {
         try
         {
@@ -188,22 +201,25 @@ internal sealed class GameBrewing : IBrewGame
 
             if (items == null || target is not { } to) return null;
 
-            var isMoved = false;
+            var bottles = 0;
             var held = items.GetItemDataList(role.InstanceId);
-            var ids = new List<long>();
+            var stacks = new List<(long Id, int Count)>();
 
             for (var i = 0; held != null && i < held.Count; i++)
             {
-                if (held[i] is { } item && item.ItemConfigId == drinkId) ids.Add(item.InstanceId);
+                if (held[i] is { } item && item.ItemConfigId == drinkId) stacks.Add((item.InstanceId, item.ItemCount));
             }
 
-            foreach (var id in ids) isMoved |= items.TryQuickMoveItem(id, role.InstanceId, to, true);
+            foreach (var (id, count) in stacks)
+            {
+                if (items.TryQuickMoveItem(id, role.InstanceId, to, true)) bottles += count - LeftIn(items, id, role.InstanceId);
+            }
 
-            if (!isMoved) return null;
+            if (bottles <= 0) return null;
 
             Ac_Brew_RefreshBag.SendAction();
 
-            return new Places(config, agents, role.InstanceId, GameLanguage.IsChinese()).Name(to);
+            return (new Places(config, agents, role.InstanceId, GameLanguage.IsChinese()).Name(to), bottles);
         }
         catch (Exception ex)
         {
