@@ -13,7 +13,7 @@ namespace BrewingHub;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.1.5";
+    private const string Version = "0.1.6";
     private const string StackingGuid = "com.dev.survivallog.stacking";
 
     public override void Load()

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.6
+
+- Fixed: the search box on the brewing screen now accepts Chinese and other typing that needs an input method.
+- Made for Survival Log 1.1.19611.
+
 ## 0.1.5
 
 - The brewing screen no longer stutters while it is open, and loading a save or switching the language no longer freezes the game for a moment. The screen also stops redrawing when nothing on it has changed.
