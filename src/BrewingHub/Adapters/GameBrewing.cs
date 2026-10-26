@@ -34,11 +34,15 @@ internal sealed class GameBrewing : IBrewGame
         _log = log;
     }
 
-    public BrewRead Read()
+    public BrewRead Read() => ReadSafely(withStock: true);
+
+    public BrewRead ReadBarrels() => ReadSafely(withStock: false);
+
+    private BrewRead ReadSafely(bool withStock)
     {
         try
         {
-            return ReadCellar();
+            return ReadCellar(withStock);
         }
         catch (Exception ex)
         {
@@ -244,7 +248,7 @@ internal sealed class GameBrewing : IBrewGame
         }
     }
 
-    private BrewRead ReadCellar()
+    private BrewRead ReadCellar(bool withStock)
     {
         var game = LoadedGame();
 
@@ -263,7 +267,7 @@ internal sealed class GameBrewing : IBrewGame
         var places = new Places(config, agents, role.InstanceId, isChinese);
         var furnitures = BarrelFurnitures(agents);
         var catalog = Catalog(config, furnitures.FirstOrDefault(), isChinese);
-        var stock = ReadStock(items, config, role.InstanceId, hour, places);
+        var stock = withStock ? ReadStock(items, config, role.InstanceId, hour, places) : new List<Core.Stack>();
         var nowHour = Furniture.GetBrewNowHour();
         var barrels = furnitures.Select(furniture => ReadBarrel(items, config, furniture, hour, nowHour, places)).ToList();
         var openId = OpenBarrelId();
@@ -359,7 +363,7 @@ internal sealed class GameBrewing : IBrewGame
             var item = available[i];
 
             if (item == null || item.ItemCount <= 0) continue;
-            if (item.OwnerId != roleId && (IsSetApart(item.OwnerId) || Furniture.IsBrewBarrelOwner(item.OwnerId))) continue;
+            if (item.OwnerId != roleId && places.IsSetApartOrBarrel(item.OwnerId)) continue;
             if (config.Get_Config_Item(item.ItemConfigId) is not { CanBrew: true } row) continue;
 
             stock.Add(StackOf(item, row, hour, places.Name(item.OwnerId)));
@@ -685,6 +689,7 @@ internal sealed class GameBrewing : IBrewGame
         private readonly long _roleId;
         private readonly bool _isChinese;
         private readonly Dictionary<long, string> _names = new();
+        private readonly Dictionary<long, bool> _setApart = new();
 
         public Places(ConfigManager config, AgentManager agents, long roleId, bool isChinese)
         {
@@ -706,21 +711,22 @@ internal sealed class GameBrewing : IBrewGame
             return name;
         }
 
+        /// <summary>Asked for every stack the player can reach, and a few storages hold most of them, so each owner is looked up once.</summary>
+        public bool IsSetApartOrBarrel(long ownerId)
+        {
+            if (_setApart.TryGetValue(ownerId, out var known)) return known;
+
+            return _setApart[ownerId] = IsSetApart(ownerId) || Furniture.IsBrewBarrelOwner(ownerId);
+        }
+
         private string? FurnitureName(long ownerId)
         {
-            var furnitures = _agents.GetAllFurnitures();
+            var furniture = _agents.GetAgent(ownerId)?.TryCast<Furniture>();
             var rows = _config._Config_Furniture_Dict;
 
-            for (var i = 0; furnitures != null && rows != null && i < furnitures.Count; i++)
-            {
-                var furniture = furnitures[i];
+            if (furniture == null || rows == null || !rows.ContainsKey(furniture.AgentConfigId)) return null;
 
-                if (furniture?.InstanceId != ownerId || !rows.ContainsKey(furniture.AgentConfigId)) continue;
-
-                return Translate(_config, rows[furniture.AgentConfigId]?.Name);
-            }
-
-            return null;
+            return Translate(_config, rows[furniture.AgentConfigId]?.Name);
         }
     }
 }

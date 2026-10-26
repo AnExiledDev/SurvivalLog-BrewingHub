@@ -11,6 +11,9 @@ public interface IBrewGame
 {
     BrewRead Read();
 
+    /// <summary>The barrels alone, with no stock: what watching for finished and collected barrels needs, at a fraction of Read's cost.</summary>
+    BrewRead ReadBarrels();
+
     /// <summary>Moves up to this many units of a stack; with no way to split it, the whole stack. Returns the units moved.</summary>
     int MoveUnits(long instanceId, long fromOwnerId, long toOwnerId, int units);
 

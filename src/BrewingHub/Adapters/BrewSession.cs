@@ -28,6 +28,7 @@ internal sealed class BrewSession
 
     private string _shownState = "";
     private Catalog? _sentCatalog;
+    private Catalog? _catalog;
     private float _nextRefreshAt;
     private bool _wasScreenOpen;
 
@@ -202,21 +203,26 @@ internal sealed class BrewSession
 
     /// <summary>
     /// Reads the base once: the page gets the open barrel's state, and each barrel is compared with how it was last
-    /// seen, so a finished barrel is told about and a collected one is brewed again when asked.
+    /// seen, so a finished barrel is told about and a collected one is brewed again when asked. With the brewing screen
+    /// closed only the barrels are read: the page has nothing to draw, and planning every drink from every storage
+    /// every few seconds was most of what this mod cost.
     /// </summary>
     private void Refresh(float now)
     {
-        var read = _game.Read();
+        var isOpen = _isBrewScreenOpen();
+        var read = isOpen ? _game.Read() : _game.ReadBarrels();
 
         if (read is BrewRead.NoGame) ForgetGame();
 
         var cellar = (read as BrewRead.Ready)?.Cellar;
 
+        if (cellar != null) _catalog = cellar.Catalog;
+
         _nextRefreshAt = now + (cellar?.OpenId != null || _wasScreenOpen ? OpenRefreshSeconds : ClosedRefreshSeconds);
 
-        if (cellar != null && Watch(cellar)) cellar = (_game.Read() as BrewRead.Ready)?.Cellar ?? cellar;
+        if (cellar != null && Watch(cellar)) cellar = ((isOpen ? _game.Read() : _game.ReadBarrels()) as BrewRead.Ready)?.Cellar ?? cellar;
 
-        SendState(cellar);
+        SendState(isOpen ? cellar : null);
     }
 
     /// <summary>
@@ -273,7 +279,7 @@ internal sealed class BrewSession
     {
         if (!_isPuttingAway || barrel.ResultItemId <= 0 || _putAway(barrel.ResultItemId) is not { } stored) return null;
 
-        var drink = (_sentCatalog ?? Catalog.Empty).Items.TryGetValue(barrel.ResultItemId, out var item) ? item.Name : Texts.Drink.Pick(IsChinese);
+        var drink = (_catalog ?? Catalog.Empty).Items.TryGetValue(barrel.ResultItemId, out var item) ? item.Name : Texts.Drink.Pick(IsChinese);
 
         return Texts.BottlesStored.Say(IsChinese, stored.Bottles, drink, stored.Place);
     }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4
+
+- Less stutter: while the brewing screen is closed, the mod only checks your barrels, instead of reading every food in your storages every few seconds.
+
 ## 0.1.3
 
 - Fixed: Load could take food out of a stove that was cooking, which stopped that stove. Food in a stove is no longer used.

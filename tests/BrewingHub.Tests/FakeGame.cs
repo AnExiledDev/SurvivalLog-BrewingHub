@@ -85,6 +85,8 @@ internal sealed class FakeGame : IBrewGame
 
     public BrewRead Read() => HasGame ? new BrewRead.Ready(Cellar()) : new BrewRead.NoGame();
 
+    public BrewRead ReadBarrels() => HasGame ? new BrewRead.Ready(Cellar() with { Stock = new List<Stack>() }) : new BrewRead.NoGame();
+
     public int MoveUnits(long instanceId, long fromOwnerId, long toOwnerId, int units)
     {
         var source = ListOf(fromOwnerId);
