@@ -2,14 +2,19 @@
 
 ## 0.1.2
 
-- Load no longer over-fills the barrel when a stack cannot be split. It moves what fits and says how much went in, and Collect and brew again does not start the barrel.
-- With PutBottlesAway on, the message now counts the bottles that actually moved, and the setting's description says every bottle of that drink in your bag is moved.
-- Keys work again if the brewing screen closes while you are typing in a search box.
+- Fixed: Load could put too much in the barrel when a stack couldn't be split. It now moves what fits and tells you how much went in.
+- Collect and brew again no longer starts a barrel that Load couldn't fill.
+- With PutBottlesAway on, the message counts the bottles that actually moved. The setting's description now says it moves every bottle of that drink in your bag.
+- Fixed: keys stopped working if the brewing screen closed while you were typing in a search box.
 
 ## 0.1.1
 
-- The brewing screen keeps the same height as food goes in and out of the barrel. The quality line, the one-click changes and the buttons under the barrel now have fixed sizes.
+- The brewing screen no longer jumps in height as food goes in and out of the barrel.
 
 ## 0.1.0
 
-- First release. The brewing barrel screen gets a Brewing Hub column with Brew now, Recipes, Ingredients and Barrels tabs, the quality and the drink as you fill, one-click changes for a better drink or one more bottle, Load from your bag and storages, Empty to bag, Collect and brew again, and a "Brew again when collected" switch.
+- First release.
+- The brewing barrel screen gets a Brewing Hub column with Brew now, Recipes, Ingredients and Barrels tabs.
+- As you fill a barrel, it shows the quality and which drink you'll get, with one-click changes for a better drink or one more bottle.
+- Load fills the barrel from your bag and storages, and Empty to bag takes everything out.
+- Collect and brew again, and a "Brew again when collected" switch, refill a finished barrel for the same drink.

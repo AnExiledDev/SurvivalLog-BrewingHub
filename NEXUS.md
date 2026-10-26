@@ -7,7 +7,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 [size=5]Main features[/size]
 [list]
 [*][b]Brew now[/b]: the best barrel of Strong, Average and Poor drink your food can make, with the bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Load puts what is in the barrel back in your bag, then fills it from your bag and storages. Load uses the food closest to spoiling first, or the freshest first if you prefer (setting [font=Courier New]FillSpoilingFirst[/font]). Spoiled food is never used.[/*]
-[*][b]Quality as you fill[/b]: under the barrel, the mix's quality (total morale over total satiety), the line for the next drink up, the satiety that fills no bottle and how much more fills the next one.[/*]
+[*][b]Quality as you fill[/b]: under the barrel you see the mix's quality (total morale divided by total satiety), how far it is from the next drink up, and how much more satiety fills one more bottle.[/*]
 [*][b]One-click changes[/b]: above the start button, buttons to add a food from your bag or storage, or take one out, when that makes a better drink or one more bottle, with what the barrel would make after.[/*]
 [*][b]Recipes[/b]: each drink with its quality range, its description, the foods best for it, what it is used in and how many relief requests ask for it, plus your talents' effect on brewing time and satiety per bottle.[/*]
 [*][b]Ingredients[/b]: every brewable food with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more lift the barrel to the next drink. Search, filter and sort. Click a row to put one in the barrel.[/*]
@@ -15,7 +15,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 [*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
 [*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.[/*]
 [/list]
-With Exiled's Toolkit, a barrel finishing and a barrel brewing again show as toasts.
+With Exiled's Toolkit, you get a notice when a barrel finishes or starts brewing again.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
@@ -61,7 +61,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 [size=5]主要功能[/size]
 [list]
 [*][b]现在能酿[/b]：用你的食材能酿出的烈性、普通和劣质酒的最佳一桶，显示瓶数、品质、酿造时间和每种食材的位置（一天内会变质的食材会标出）。「放入」会先把桶里的食材取回背包，再从背包和储物装桶。「放入」默认优先使用快变质的食材，也可改为优先使用最新鲜的（设置 [font=Courier New]FillSpoilingFirst[/font]）。变质的食材不会被使用。[/*]
-[*][b]装桶时显示品质[/b]：酿酒桶下方显示这桶的品质（总心态除以总饱腹）、下一种酒的分界、装不满一瓶的饱腹，以及再加多少可以装满下一瓶。[/*]
+[*][b]装桶时显示品质[/b]：酿酒桶下方显示这桶的品质（总心态除以总饱腹）、离下一种更好的酒还差多少，以及再加多少饱腹能多装一瓶。[/*]
 [*][b]一键改进[/b]：开始按钮上方的按钮可以从背包或储物加入一种食材，或取出一份，只在能让酒更好或多出一瓶时显示，并标出改完后能酿出什么。[/*]
 [*][b]酒谱[/b]：每种酒的品质范围、说明、最适合的食材、可用于什么，以及有多少个救济委托需要它，并列出天赋对酿造时间和每瓶所需饱腹的影响。[/*]
 [*][b]食材[/b]：每种可酿食材的饱腹、心态、品质、一瓶需要几份、你有多少，以及再加几份能让这桶升到下一种酒。可搜索、筛选和排序。点击一行可放一份进桶。[/*]
@@ -69,7 +69,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 [*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶，并为同一种酒重新装桶、开始酿造。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
 [*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出一桶酒时，背包里所有这种酒都会移到已经放有这种酒的家中储物里。[/*]
 [/list]
-安装 Exiled's Toolkit 后，酿好的桶和再酿一桶都会弹出提示。
+安装 Exiled's Toolkit 后，酒桶酿好或重新开始酿造时会弹出提示。
 
 Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，可以随时移除。
 
