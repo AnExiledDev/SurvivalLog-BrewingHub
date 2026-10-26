@@ -33,6 +33,9 @@ public static class BrewMath
         return quality < rules.High ? 1 : 2;
     }
 
+    /// <summary>The tier a mix brews, the same as Of(rules, mix).Tier without building the whole brew.</summary>
+    public static int TierOf(Rules rules, Mix mix) => TierOf(rules, mix.Sat > 0 ? mix.Mood / mix.Sat : 0);
+
     public static Brew Of(Rules rules, Mix mix)
     {
         var quality = mix.Sat > 0 ? mix.Mood / mix.Sat : 0;
@@ -71,7 +74,7 @@ public static class BrewMath
     {
         for (var n = 1; n <= 20; n++)
         {
-            if (Of(rules, mix.Add(sat, mood, n)).Tier >= tier) return n;
+            if (TierOf(rules, mix.Add(sat, mood, n)) >= tier) return n;
         }
 
         return null;
@@ -82,7 +85,7 @@ public static class BrewMath
     {
         var n = 0;
 
-        while (n < 9 && Of(rules, mix.Add(sat, mood, n + 1)).Tier == 2) n++;
+        while (n < 9 && TierOf(rules, mix.Add(sat, mood, n + 1)) == 2) n++;
 
         return n;
     }

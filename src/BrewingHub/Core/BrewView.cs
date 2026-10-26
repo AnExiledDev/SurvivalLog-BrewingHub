@@ -21,7 +21,9 @@ public static class BrewView
 {
     private const int UrgentHours = 24;
 
-    public static string NoState() => Json.Object(json => json.WriteBoolean("show", false));
+    private static readonly string Hidden = Json.Object(json => json.WriteBoolean("show", false));
+
+    public static string NoState() => Hidden;
 
     /// <summary>
     /// The open barrel: the rules, what is in it and what it brews, the best barrel of each drink from the food in

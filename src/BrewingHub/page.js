@@ -27,6 +27,15 @@
   var isBusy = false;
   var busyTimer = 0;
   var hasReportedPageAccess = false;
+  // Bumped whenever what the screen shows may have changed: the plugin's data or words (dataVersion), or a tab,
+  // filter, sort or search (uiVersion). An unchanged pair means the drawing would come out the same, so it is not built.
+  var dataVersion = 0;
+  var uiVersion = 0;
+  var lastWords = null;
+  // The brewing screen's frame as last found, with the parts found and drawn in it; null until found again.
+  var page = null;
+  // The document something was drawn into, so closing the barrel clears it and an idle check does nothing at all.
+  var drawnDoc = null;
 
   // The plugin hands the words over before its first call, so a missing one only shows its key.
   function say(key) {
@@ -177,20 +186,49 @@
     });
     cat.drinks = (data && data.drinks) || [];
     cat.items = (data && data.items) || {};
+    dataVersion++;
     patchPagesSafely();
   }
 
   // The open barrel and everything around it; drawn at once and kept up by the page check.
   function brew(data) {
     st = data || { show: false };
+    dataVersion++;
     patchPagesSafely();
   }
 
   // ---------- game pages ----------
 
   // The brewing screen is a same-origin iframe, so its document can be reached from here; polled because the game
-  // creates and drops that iframe whenever it likes.
+  // creates and drops that iframe whenever it likes. With no barrel open and nothing drawn, a check does nothing.
   function patchPages() {
+    var words = window.__slbrewinghubWords;
+
+    if (words !== lastWords) {
+      lastWords = words;
+      dataVersion++;
+    }
+
+    if (!st.show) {
+      if (drawnDoc) clearPage(drawnDoc);
+
+      drawnDoc = null;
+      page = null;
+
+      return;
+    }
+
+    var found = findBrewPage();
+
+    if (found) draw(found);
+  }
+
+  // The frame found last time while the game keeps it (same frame, address and document); else searched for again.
+  function findBrewPage() {
+    if (page && page.frame.isConnected && (page.frame.src || '') === page.src && frameDocument(page.frame) === page.doc) return page;
+
+    page = null;
+
     var frames = document.querySelectorAll('iframe');
 
     for (var i = 0; i < frames.length; i++) {
@@ -198,11 +236,7 @@
 
       if (!/BrewPanel\.html/.test(src)) continue;
 
-      var doc = null;
-
-      try {
-        doc = frames[i].contentDocument;
-      } catch (e) {}
+      var doc = frameDocument(frames[i]);
 
       if (!doc) {
         if (!hasReportedPageAccess) send('diag|cannot reach a game page document (root ' + location.protocol + ', iframe ' + src + ')');
@@ -210,7 +244,19 @@
         continue;
       }
 
-      draw(doc, frames[i].contentWindow);
+      page = { frame: frames[i], src: src, doc: doc, win: frames[i].contentWindow, parts: null, drawnData: -1, drawnUi: -1, bands: [null, null, null], bandData: -1, tint: {} };
+
+      return page;
+    }
+
+    return null;
+  }
+
+  function frameDocument(frame) {
+    try {
+      return frame.contentDocument;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -299,33 +345,60 @@
     '#itemTooltip{white-space:pre-line}'
   ].join('\n');
 
-  function draw(doc, win) {
-    if (!st.show) {
-      clearPage(doc);
+  // Builds the drawing only when the data, the words or the player's tab, filter, sort or search changed, or the game
+  // redrew a column; otherwise a check only looks that the drawing is still in place.
+  function draw(p) {
+    var parts = partsOf(p);
 
-      return;
+    if (!parts) return;
+
+    drawnDoc = p.doc;
+
+    if (p.drawnData !== dataVersion || p.drawnUi !== uiVersion) {
+      setHtml(parts.quality, qualityHtml());
+      setHtml(parts.ferment, fermentHtml());
+      setHtml(parts.buttons, buttonsHtml());
+      drawColumn(p.doc, parts.col);
+      p.drawnData = dataVersion;
+      p.drawnUi = uiVersion;
     }
 
+    drawBands(p);
+    tintItems(p);
+    extendTooltip(p.doc, p.win);
+  }
+
+  // The game's columns and the parts drawn into them, searched for again only when the game redrew or dropped one,
+  // which also has the drawing built again.
+  function partsOf(p) {
+    var parts = p.parts;
+
+    if (parts && parts.system.isConnected && parts.col.parentNode === parts.system && parts.vat.isConnected && parts.quality.parentNode === parts.vat
+      && parts.tsec.isConnected && parts.ferment.parentNode === parts.tsec && parts.buttons.parentNode === parts.tsec) return parts;
+
+    var doc = p.doc;
     var system = doc.querySelector('.brew-system');
     var vat = doc.querySelector('.vat-body');
     var tsec = doc.querySelector('.ferm-col .tsec');
 
-    if (!system || !vat || !tsec) return;
+    p.parts = null;
+    p.drawnData = -1;
+
+    if (!system || !vat || !tsec) return null;
 
     addPageStyle(doc, STYLE_ID, PAGE_CSS);
 
-    var col = ensureColumn(doc, win, system);
-    var quality = ensureNode(doc, vat, 'bhQuality', null);
-    var ferment = ensureNode(doc, tsec, 'bhFerment', tsec.firstChild);
-    var buttons = ensureNode(doc, tsec, 'bhButtons', null);
+    p.parts = {
+      system: system,
+      vat: vat,
+      tsec: tsec,
+      col: ensureColumn(doc, p.win, system),
+      quality: ensureNode(doc, vat, 'bhQuality', null),
+      ferment: ensureNode(doc, tsec, 'bhFerment', tsec.firstChild),
+      buttons: ensureNode(doc, tsec, 'bhButtons', null)
+    };
 
-    setHtml(quality, qualityHtml());
-    setHtml(ferment, fermentHtml());
-    setHtml(buttons, buttonsHtml());
-    drawBands(doc);
-    drawColumn(doc, col);
-    tintItems(doc, win);
-    extendTooltip(doc, win);
+    return p.parts;
   }
 
   function clearPage(doc) {
@@ -394,6 +467,7 @@
     search.addEventListener('focusout', function () { send('focus|0'); });
     search.addEventListener('input', function () {
       ui.search = search.value;
+      uiVersion++;
       patchPagesSafely();
     });
 
@@ -417,7 +491,48 @@
 
     var views = { now: viewNow, recipes: viewRecipes, ings: viewIngredients, barrels: viewBarrels };
 
-    setHtml(col.querySelector('#bhView'), views[ui.tab]());
+    setRows(doc, col.querySelector('#bhView'), views[ui.tab]());
+  }
+
+  // The list drawn row by row: a row whose drawing did not change keeps its node, so when one food's count changes
+  // only that row is replaced, and the page sees no change at all when nothing did.
+  function setRows(doc, view, rows) {
+    var old = view.__bhRows || Object.create(null);
+    var kept = Object.create(null);
+    var nodes = [];
+
+    for (var i = 0; i < rows.length; i++) {
+      var spare = old[rows[i]];
+      var node = spare && spare.length ? spare.pop() : rowNode(doc, rows[i]);
+
+      (kept[rows[i]] || (kept[rows[i]] = [])).push(node);
+      nodes.push(node);
+    }
+
+    view.__bhRows = kept;
+
+    var at = view.firstChild;
+
+    for (i = 0; i < nodes.length; i++) {
+      if (nodes[i] === at) at = at.nextSibling;
+      else view.insertBefore(nodes[i], at);
+    }
+
+    while (at) {
+      var next = at.nextSibling;
+
+      view.removeChild(at);
+      at = next;
+    }
+  }
+
+  // One row's HTML (a single element) as a node.
+  function rowNode(doc, html) {
+    var holder = doc.createElement('div');
+
+    holder.innerHTML = html;
+
+    return holder.firstChild;
   }
 
   function toggle(node, name, isOn) {
@@ -447,6 +562,7 @@
       default: return;
     }
 
+    uiVersion++;
     patchPagesSafely();
   }
 
@@ -488,22 +604,34 @@
   }
 
   // The quality line each drink starts at, under the game's own three drink names; put back when the game redraws them.
-  function drawBands(doc) {
+  // A check only looks that the three lines are still on the page; the game rewriting a label drops its line.
+  function drawBands(p) {
+    var bands = p.bands;
+
+    if (p.bandData === dataVersion && bands[0] && bands[0].isConnected && bands[1] && bands[1].isConnected && bands[2] && bands[2].isConnected) return;
+
+    p.bandData = dataVersion;
+
     for (var i = 0; i < 3; i++) {
-      var label = doc.getElementById('ql' + i);
+      var label = p.doc.getElementById('ql' + i);
+
+      bands[i] = null;
 
       if (!label) continue;
 
       var text = bandText(i);
       var band = label.querySelector('.bh-band');
 
-      if (band && band.textContent === text) continue;
-      if (band) band.remove();
+      if (!band || band.textContent !== text) {
+        if (band) band.remove();
 
-      band = doc.createElement('i');
-      band.className = 'bh-band ' + OURS;
-      band.textContent = text;
-      label.appendChild(band);
+        band = p.doc.createElement('i');
+        band.className = 'bh-band ' + OURS;
+        band.textContent = text;
+        label.appendChild(band);
+      }
+
+      bands[i] = band;
     }
   }
 
@@ -553,27 +681,83 @@
     return '';
   }
 
-  // The dot on each brewable item takes the colour of the drink it makes alone.
-  function tintItems(doc, win) {
-    var state = win && win.State;
+  var TINTS = ['bh-poor', 'bh-avg', 'bh-strong'];
+
+  // The dot on each brewable item takes the colour of the drink it makes alone. The game draws a grid's items anew
+  // whenever one changes (webui-bag.js renderItems), which gives the grid a new last item, so the items are only gone
+  // over again when a grid, the page's item lists or the data changed.
+  function tintItems(p) {
+    var state = p.win && p.win.State;
 
     if (!state) return;
 
-    doc.querySelectorAll('#bagGrid .item.brewable, #vatGrid .item').forEach(function (el) {
-      var item = findItem(state.bagItems, el.id) || findItem(state.barrelItems, el.id);
+    var t = p.tint;
+    var bag = gridOf(p, 'bagGrid');
+    var vat = gridOf(p, 'vatGrid');
+
+    if (t.data === dataVersion && t.state === state && t.bagItems === state.bagItems && t.bagCount === countOf(state.bagItems)
+      && t.barrelItems === state.barrelItems && t.barrelCount === countOf(state.barrelItems) && isSameGrid(t.bag, bag) && isSameGrid(t.vat, vat)) return;
+
+    var byId = Object.create(null);
+
+    addItems(byId, state.bagItems);
+    addItems(byId, state.barrelItems);
+    tintGrid(bag, byId, true);
+    tintGrid(vat, byId, false);
+
+    t.data = dataVersion;
+    t.state = state;
+    t.bagItems = state.bagItems;
+    t.bagCount = countOf(state.bagItems);
+    t.barrelItems = state.barrelItems;
+    t.barrelCount = countOf(state.barrelItems);
+    t.bag = gridMark(bag);
+    t.vat = gridMark(vat);
+  }
+
+  // A grid found last time while it is still on the page; else looked up again.
+  function gridOf(p, id) {
+    var grid = p.tint[id];
+
+    if (grid && grid.isConnected) return grid;
+
+    return (p.tint[id] = p.doc.getElementById(id));
+  }
+
+  function countOf(list) { return list ? list.length : 0; }
+
+  function gridMark(grid) { return { grid: grid, count: grid ? grid.childElementCount : 0, last: grid ? grid.lastElementChild : null }; }
+
+  function isSameGrid(mark, grid) {
+    return !!mark && mark.grid === grid && (!grid || (mark.count === grid.childElementCount && mark.last === grid.lastElementChild));
+  }
+
+  // The page's items by id, the bag's first, as the page itself looks them up.
+  function addItems(byId, list) {
+    for (var i = 0; list && i < list.length; i++) {
+      var key = String(list[i].itemId);
+
+      if (!(key in byId)) byId[key] = list[i];
+    }
+  }
+
+  // The items are the grid's own children; in the bag only the brewable ones are tinted.
+  function tintGrid(grid, byId, isBrewableOnly) {
+    if (!grid) return;
+
+    var items = grid.children;
+
+    for (var i = 0; i < items.length; i++) {
+      var el = items[i];
+
+      if (!el.classList.contains('item') || (isBrewableOnly && !el.classList.contains('brewable'))) continue;
+
+      var item = byId[String(el.id)];
       var food = item && cat.ings[item.configId];
       var want = food && food.sat > 0 ? 'bh-' + TIER_CLASS[tierOf(food.mood / food.sat)] : null;
 
-      ['bh-poor', 'bh-avg', 'bh-strong'].forEach(function (name) { toggle(el, name, name === want); });
-    });
-  }
-
-  function findItem(list, itemId) {
-    list = list || [];
-
-    for (var i = 0; i < list.length; i++) if (String(list[i].itemId) === String(itemId)) return list[i];
-
-    return null;
+      for (var k = 0; k < TINTS.length; k++) toggle(el, TINTS[k], TINTS[k] === want);
+    }
   }
 
   // The item tip gets the food's morale, its quality, and the drink it makes alone.
@@ -615,14 +799,14 @@
   function viewNow() {
     var plans = st.plans || [];
     var canLoad = barrel().state === IDLE && !barrel().locked;
-    var html = '<div class="bh-sub">' + esc(say('nowNote')) + ' ' + esc(say(st.spoilingFirst ? 'spoilFirst' : 'freshFirst')) + '</div>';
+    var rows = ['<div class="bh-sub">' + esc(say('nowNote')) + ' ' + esc(say(st.spoilingFirst ? 'spoilFirst' : 'freshFirst')) + '</div>'];
 
     [2, 1, 0].forEach(function (tier) {
       var drink = drinkOf(tier);
       var p = plans[tier];
 
       if (!p) {
-        html += '<div class="bh-card dim">' + head(drink, tier, esc(say('noPlan'))) + '</div>';
+        rows.push('<div class="bh-card dim">' + head(drink, tier, esc(say('noPlan'))) + '</div>');
 
         return;
       }
@@ -630,12 +814,14 @@
       var line = esc(say('bottles', p.bottles)) + ' &middot; ' + esc(say('band', fmt(p.q))) + ' &middot; ' + esc(hoursText(p.hours));
       var load = '<button' + act('load', tier, 'bh-load') + (canLoad ? '' : ' disabled') + '>' + esc(say('load')) + '</button>';
 
-      html += '<div class="bh-card">' + head(drink, tier, line, load)
+      rows.push('<div class="bh-card">' + head(drink, tier, line, load)
         + '<div class="bh-chips">' + (p.takes || []).map(chip).join('') + '</div>'
-        + (p.wasted > 0 ? '<div class="bh-sub warn">' + esc(say('wasted', num(p.wasted))) + '</div>' : '') + '</div>';
+        + (p.wasted > 0 ? '<div class="bh-sub warn">' + esc(say('wasted', num(p.wasted))) + '</div>' : '') + '</div>');
     });
 
-    return html + '<div class="bh-sub">' + esc(say('loadNote')) + '</div>';
+    rows.push('<div class="bh-sub">' + esc(say('loadNote')) + '</div>');
+
+    return rows;
   }
 
   // The foods that make a drink best: the most satiety, and for the better drinks the most morale on top.
@@ -649,7 +835,7 @@
   function viewRecipes() {
     var r = rules();
     var plans = st.plans || [];
-    var html = '<div class="bh-sub">' + esc(say('recipesNote', num(r.per), r.max)) + '</div>';
+    var rows = ['<div class="bh-sub">' + esc(say('recipesNote', num(r.per), r.max)) + '</div>'];
 
     [2, 1, 0].forEach(function (tier) {
       var drink = drinkOf(tier);
@@ -657,8 +843,7 @@
       var can = '<span class="bh-can' + (p ? ' ok' : '') + '">' + esc(p ? say('canMake', p.bottles) : say('noneNow')) + '</span>';
       var best = topFor(tier);
       var used = drink.used || [];
-
-      html += '<div class="bh-card">' + head(drink, tier, esc(tierName(tier) + ' \u00b7 ' + say('band', bandText(tier))), can)
+      var html = '<div class="bh-card">' + head(drink, tier, esc(tierName(tier) + ' \u00b7 ' + say('band', bandText(tier))), can)
         + (drink.des ? '<div class="bh-desc">' + esc(drink.des) + '</div>' : '');
 
       if (best.length) {
@@ -677,7 +862,7 @@
           + (drink.asks ? '<span class="ask">' + esc(say('asks', drink.asks)) + '</span>' : '') + '</div>';
       }
 
-      html += '</div>';
+      rows.push(html + '</div>');
     });
 
     var talents = [];
@@ -686,8 +871,10 @@
 
     talents.push(say('perBottle', num(r.per)));
     talents.push(say('lines', fmt(r.low), fmt(r.high)));
+    rows.push('<div class="bh-lbl">' + esc(say('talents')) + '</div>');
+    rows.push('<div class="bh-sub">' + talents.map(esc).join('<br>') + '</div>');
 
-    return html + '<div class="bh-lbl">' + esc(say('talents')) + '</div><div class="bh-sub">' + talents.map(esc).join('<br>') + '</div>';
+    return rows;
   }
 
   var SORTS = {
@@ -702,36 +889,38 @@
   function viewIngredients() {
     var words = ui.search.toLowerCase();
     var all = cat.ingList.filter(function (i) { return i.sat > 0; });
-    var rows = all.filter(function (i) {
+    var foods = all.filter(function (i) {
       return (!ui.rawOnly || !i.dish) && (!ui.haveOnly || have(i.id) > 0) && (!words || String(i.name).toLowerCase().indexOf(words) >= 0);
     });
     var sort = SORTS[ui.sort] || SORTS.quality;
 
-    rows.sort(function (a, b) { return sort(a, b) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0); });
+    foods.sort(function (a, b) { return sort(a, b) || (a.name < b.name ? -1 : a.name > b.name ? 1 : 0); });
 
     var reachHead = st.reachKeeps ? say('colKeeps', tierName(2)) : say('colTo', tierName(st.reachTier == null ? 2 : st.reachTier));
     var sortHead = function (key, word) { return '<span' + act('sort', key, ui.sort === key ? 'on' : '') + '>' + esc(say(word)) + '</span>'; };
-    var html = '<div class="bh-trow bh-th"><span></span><span>' + esc(say('colIng')) + '</span>' + sortHead('sat', 'colSat')
+    var rows = ['<div class="bh-trow bh-th"><span></span><span>' + esc(say('colIng')) + '</span>' + sortHead('sat', 'colSat')
       + '<span>' + esc(say('colMood')) + '</span>' + sortHead('quality', 'colQual') + '<span>' + esc(say('colPer')) + '</span>'
-      + sortHead('have', 'colHave') + '<span>' + esc(reachHead) + '</span></div>';
+      + sortHead('have', 'colHave') + '<span>' + esc(reachHead) + '</span></div>'];
 
-    rows.forEach(function (i) {
+    foods.forEach(function (i) {
       var q = i.mood / i.sat;
       var h = have(i.id);
       var reach = st.reach ? st.reach[i.id] : null;
       var reachText = reach == null ? '-' : st.reachKeeps ? (reach >= 9 ? '9+' : String(reach)) : '+' + reach;
 
-      html += '<div' + act('add', i.id, 'bh-trow') + '>' + img(i.icon) + '<span class="nm">' + esc(i.name) + '</span><span>' + num(i.sat) + '</span>'
+      rows.push('<div' + act('add', i.id, 'bh-trow') + '>' + img(i.icon) + '<span class="nm">' + esc(i.name) + '</span><span>' + num(i.sat) + '</span>'
         + '<span class="' + (i.mood < 0 ? 'neg' : '') + '">' + num(i.mood) + '</span><span class="' + TIER_CLASS[tierOf(q)] + '">' + fmt(q) + '</span>'
-        + '<span>' + perBottle(i.sat) + '</span><span class="' + (h ? 'have' : 'dim') + '">' + (h || '-') + '</span><span class="dim">' + reachText + '</span></div>';
+        + '<span>' + perBottle(i.sat) + '</span><span class="' + (h ? 'have' : 'dim') + '">' + (h || '-') + '</span><span class="dim">' + reachText + '</span></div>');
     });
 
-    return html + '<div class="bh-sub">' + esc(say('ingsNote', rows.length, all.length)) + '</div>';
+    rows.push('<div class="bh-sub">' + esc(say('ingsNote', foods.length, all.length)) + '</div>');
+
+    return rows;
   }
 
   // Every brewing barrel in the base: what it brews, how long is left, and its own buttons.
   function viewBarrels() {
-    var html = '<div class="bh-sub">' + esc(say('barrelsNote')) + '</div>';
+    var rows = ['<div class="bh-sub">' + esc(say('barrelsNote')) + '</div>'];
 
     (st.barrels || []).forEach(function (b) {
       var drink = b.tier >= 0 ? drinkOf(b.tier) : thing(b.result);
@@ -750,11 +939,11 @@
         body = '<button' + act('collect', b.id, 'bh-load go') + '>' + esc(say('collect')) + '</button>';
       }
 
-      html += '<div class="bh-card"><div class="bh-head">' + img(b.state !== IDLE ? drink.icon : null) + '<div><b>' + esc(name) + '</b><div class="bh-sub">' + esc(what) + '</div></div>' + right + '</div>'
-        + body + (b.state !== IDLE ? switchHtml(b.id, b.again, say('againWhen')) : '') + '</div>';
+      rows.push('<div class="bh-card"><div class="bh-head">' + img(b.state !== IDLE ? drink.icon : null) + '<div><b>' + esc(name) + '</b><div class="bh-sub">' + esc(what) + '</div></div>' + right + '</div>'
+        + body + (b.state !== IDLE ? switchHtml(b.id, b.again, say('againWhen')) : '') + '</div>');
     });
 
-    return html;
+    return rows;
   }
 
   setInterval(patchPagesSafely, 200);

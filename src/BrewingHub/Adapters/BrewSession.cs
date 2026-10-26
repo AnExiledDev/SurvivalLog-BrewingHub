@@ -15,21 +15,27 @@ internal sealed class BrewSession
     private const float OpenRefreshSeconds = 0.5f;
     private const float ClosedRefreshSeconds = 5f;
 
+    /// <summary>How often the brewing screen is checked for opening or closing; the page itself looks five times a second.</summary>
+    private const float ScreenCheckSeconds = 0.1f;
+
     private readonly IBrewGame _game;
     private readonly WebPage _page;
     private readonly Func<string, bool, bool> _toast;
     private readonly Func<int, (string Place, int Bottles)?> _putAway;
     private readonly Func<bool> _isBrewScreenOpen;
+    private readonly Func<bool, BrewRead> _readScreen;
+    private readonly Action _prepare;
+    private readonly StateFeed _feed;
     private readonly WebKeyboard _keyboard = new();
     private readonly Action<string> _log;
 
     private bool _isSpoilingFirst = true;
     private bool _isPuttingAway;
+    private BrewExtras _extras;
 
-    private string _shownState = "";
-    private Catalog? _sentCatalog;
     private Catalog? _catalog;
     private float _nextRefreshAt;
+    private float _nextScreenCheckAt;
     private bool _wasScreenOpen;
 
     /// <summary>Barrels that brew again when collected, the drink each last brewed, and each barrel as last seen; main thread only.</summary>
@@ -37,13 +43,21 @@ internal sealed class BrewSession
     private readonly Dictionary<long, int> _lastTier = new();
     private readonly Dictionary<long, Barrel> _seen = new();
 
-    public BrewSession(IBrewGame game, WebPage page, Func<string, bool, bool> toast, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Action<string> log)
+    /// <summary>
+    /// readScreen is the refresh's read: the barrels alone with the screen closed (false), what the open screen shows
+    /// otherwise. prepare runs once a frame for work spread over frames.
+    /// </summary>
+    public BrewSession(IBrewGame game, WebPage page, Func<string, bool, bool> toast, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Func<bool, BrewRead> readScreen, Action prepare, Action<string> log)
     {
         _game = game;
         _page = page;
         _toast = toast;
         _putAway = putAway;
         _isBrewScreenOpen = isBrewScreenOpen;
+        _readScreen = readScreen;
+        _prepare = prepare;
+        _feed = new StateFeed(page.Catalog, page.Brew);
+        _extras = new BrewExtras(_again, _isSpoilingFirst);
         _log = log;
     }
 
@@ -54,6 +68,7 @@ internal sealed class BrewSession
     {
         _isSpoilingFirst = isSpoilingFirst;
         _isPuttingAway = isPuttingAway;
+        _extras = new BrewExtras(_again, _isSpoilingFirst);
         ForgetSent();
     }
 
@@ -65,12 +80,18 @@ internal sealed class BrewSession
 
         while (PageMessages.TryTake(out var command)) HandleSafely(command);
 
-        if (now >= _nextRefreshAt || HasScreenFlipped()) Refresh(now);
+        _prepare();
+
+        if (now >= _nextRefreshAt || HasScreenFlipped(now)) Refresh(now);
     }
 
-    /// <summary>The brewing screen opening or closing is read at once, so the view is drawn without waiting.</summary>
-    private bool HasScreenFlipped()
+    /// <summary>The brewing screen opening or closing is read within a tenth of a second, so the view is drawn without waiting.</summary>
+    private bool HasScreenFlipped(float now)
     {
+        if (now < _nextScreenCheckAt) return false;
+
+        _nextScreenCheckAt = now + ScreenCheckSeconds;
+
         var isOpen = _isBrewScreenOpen();
 
         if (isOpen == _wasScreenOpen) return false;
@@ -104,7 +125,7 @@ internal sealed class BrewSession
             case PageCommand.Ready:
                 _log("page script ready");
                 _page.ForgetWords();
-                _sentCatalog = null;
+                _feed.ForgetCatalog();
                 ForgetSent();
                 break;
             case PageCommand.NoScript:
@@ -197,7 +218,7 @@ internal sealed class BrewSession
 
     private void ForgetSent()
     {
-        _shownState = "";
+        _feed.Forget();
         _nextRefreshAt = 0f;
     }
 
@@ -205,12 +226,13 @@ internal sealed class BrewSession
     /// Reads the base once: the page gets the open barrel's state, and each barrel is compared with how it was last
     /// seen, so a finished barrel is told about and a collected one is brewed again when asked. With the brewing screen
     /// closed only the barrels are read: the page has nothing to draw, and planning every drink from every storage
-    /// every few seconds was most of what this mod cost.
+    /// every few seconds was most of what this mod cost. Open, the storages are walked only every few seconds and
+    /// after any change (see GameBrewing.ReadScreen), and the page is sent nothing when nothing it shows changed.
     /// </summary>
     private void Refresh(float now)
     {
         var isOpen = _isBrewScreenOpen();
-        var read = isOpen ? _game.Read() : _game.ReadBarrels();
+        var read = _readScreen(isOpen);
 
         if (read is BrewRead.NoGame) ForgetGame();
 
@@ -220,9 +242,9 @@ internal sealed class BrewSession
 
         _nextRefreshAt = now + (cellar?.OpenId != null || _wasScreenOpen ? OpenRefreshSeconds : ClosedRefreshSeconds);
 
-        if (cellar != null && Watch(cellar)) cellar = ((isOpen ? _game.Read() : _game.ReadBarrels()) as BrewRead.Ready)?.Cellar ?? cellar;
+        if (cellar != null && Watch(cellar)) cellar = (_readScreen(isOpen) as BrewRead.Ready)?.Cellar ?? cellar;
 
-        SendState(isOpen ? cellar : null);
+        _feed.Send(isOpen ? cellar : null, _extras);
     }
 
     /// <summary>
@@ -289,22 +311,6 @@ internal sealed class BrewSession
     {
         _log(text);
         if (!_toast(text, isWarning)) _page.Status(text);
-    }
-
-    /// <summary>The state on the game's brewing screen, sent only when it changed. The catalog goes first, since the state names items by id.</summary>
-    private void SendState(Cellar? cellar)
-    {
-        var state = cellar != null ? BrewView.State(cellar, new BrewExtras(_again, _isSpoilingFirst)) : BrewView.NoState();
-
-        if (state == _shownState) return;
-        if (cellar != null) SendCatalog(cellar.Catalog);
-        if (_page.Brew(state)) _shownState = state;
-    }
-
-    private void SendCatalog(Catalog catalog)
-    {
-        if (ReferenceEquals(catalog, _sentCatalog)) return;
-        if (_page.Catalog(BrewView.Catalog(catalog))) _sentCatalog = catalog;
     }
 
     /// <summary>A barrel's id means nothing in another save, so what is kept per barrel goes when the game is left.</summary>

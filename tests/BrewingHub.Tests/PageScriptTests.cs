@@ -274,6 +274,65 @@ public class PageScriptTests
     }
 
     [Fact]
+    public void A_check_with_nothing_new_does_not_search_the_page()
+    {
+        var page = Opened(Stocked());
+
+        page.Run("searches = 0; poll(); poll()");
+
+        Assert.Equal("0", page.Text("searches"));
+    }
+
+    [Fact]
+    public void With_no_barrel_open_the_check_does_not_search_the_page()
+    {
+        var never = new PageScript();
+
+        never.OpenBrewing();
+        never.Run("searches = 0; poll(); poll()");
+
+        Assert.Equal("0", never.Text("searches"));
+
+        var closed = Opened(Stocked());
+
+        closed.Brew(BrewView.NoState());
+        closed.Run("searches = 0; poll(); poll()");
+
+        Assert.Equal("0", closed.Text("searches"));
+    }
+
+    [Fact]
+    public void One_food_changing_redraws_only_its_own_row()
+    {
+        var game = Stocked();
+        var page = Opened(game);
+
+        page.Click("act('tab', 'ings')");
+        page.Run("function row(id) { return brewPage().getElementById('bhView').children.filter(function (r) { return r.getAttribute('data-arg') === String(id); })[0]; }");
+        page.Run("var berry = row(101), mushroom = row(102), header = brewPage().getElementById('bhView').children[0]");
+
+        game.Stock[0] = S(1, Berry, 31);
+        page.Brew(StateOf(game));
+        page.Poll();
+
+        Assert.Contains("31", page.Text("row(101).textContent"));
+        Assert.False(page.Is("row(101) === berry"));
+        Assert.True(page.Is("row(102) === mushroom"));
+        Assert.True(page.Is("brewPage().getElementById('bhView').children[0] === header"));
+    }
+
+    [Fact]
+    public void New_words_alone_redraw_the_screen()
+    {
+        var page = Opened(Stocked());
+
+        page.Run("window.__slbrewinghubWords = Object.assign({}, window.__slbrewinghubWords, { loadNote: 'Words in another language' })");
+        page.Poll();
+
+        Assert.Contains("Words in another language", page.Text("shown('#bhView')"));
+    }
+
+    [Fact]
     public void Scrolling_the_hub_list_tells_the_game_to_find_its_buttons_again()
     {
         var page = Opened(Stocked());

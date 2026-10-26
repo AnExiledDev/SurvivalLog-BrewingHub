@@ -26,29 +26,50 @@ public static class Planner
     public static Plan? For(Rules rules, IEnumerable<Stack> pool, int tier, bool isSpoilingFirst, bool canSplit)
     {
         var order = InOrder(pool.Where(stack => !stack.IsSpoiled && stack.Sat > 0 && stack.Count > 0), isSpoilingFirst).ToList();
-        var left = order.ToDictionary(stack => stack, stack => stack.Count);
-        var units = new Dictionary<Stack, int>();
+        var left = new int[order.Count];
+        var taken = new int[order.Count];
         var mix = Mix.None;
+
+        for (var i = 0; i < order.Count; i++) left[i] = order[i].Count;
 
         for (var step = 0; step < MaxSteps && mix.Sat < rules.Capacity; step++)
         {
-            var pick = order.FirstOrDefault(stack => left[stack] > 0 && Fits(rules, mix, stack, Chunk(stack, left[stack], canSplit), tier, isFirstBottle: false))
-                ?? order.FirstOrDefault(stack => left[stack] > 0 && Fits(rules, mix, stack, Chunk(stack, left[stack], canSplit), tier, isFirstBottle: true));
+            var pick = FirstFitting(rules, mix, order, left, tier, canSplit, isFirstBottle: false);
 
-            if (pick == null) break;
+            if (pick < 0) pick = FirstFitting(rules, mix, order, left, tier, canSplit, isFirstBottle: true);
 
-            var chunk = Chunk(pick, left[pick], canSplit);
+            if (pick < 0) break;
 
-            mix = mix.Add(pick, chunk);
+            var chunk = Chunk(order[pick], left[pick], canSplit);
+
+            mix = mix.Add(order[pick], chunk);
             left[pick] -= chunk;
-            units[pick] = units.TryGetValue(pick, out var taken) ? taken + chunk : chunk;
+            taken[pick] += chunk;
         }
 
         var brew = BrewMath.Of(rules, mix);
 
         if (!brew.CanStart || brew.Tier != tier) return null;
 
-        return new Plan(tier, order.Where(units.ContainsKey).Select(stack => new Take(stack, units[stack])).ToList(), brew);
+        var takes = new List<Take>();
+
+        for (var i = 0; i < order.Count; i++)
+        {
+            if (taken[i] > 0) takes.Add(new Take(order[i], taken[i]));
+        }
+
+        return new Plan(tier, takes, brew);
+    }
+
+    /// <summary>The first stack in order with some left whose next chunk fits, or -1.</summary>
+    private static int FirstFitting(Rules rules, Mix mix, List<Stack> order, int[] left, int tier, bool canSplit, bool isFirstBottle)
+    {
+        for (var i = 0; i < order.Count; i++)
+        {
+            if (left[i] > 0 && Fits(rules, mix, order[i], Chunk(order[i], left[i], canSplit), tier, isFirstBottle)) return i;
+        }
+
+        return -1;
     }
 
     /// <summary>Food closest to spoiling first, or the freshest first; food that never spoils counts as freshest. Ties go to the most filling.</summary>
@@ -72,11 +93,11 @@ public static class Planner
     /// </summary>
     private static bool Fits(Rules rules, Mix mix, Stack stack, int chunk, int tier, bool isFirstBottle)
     {
-        var next = BrewMath.Of(rules, mix.Add(stack, chunk));
+        var next = mix.Add(stack, chunk);
 
         if (next.Sat - rules.Capacity > rules.PerBottle * MostOvershoot) return false;
 
-        return isFirstBottle ? next.Sat < rules.PerBottle : next.Tier == tier;
+        return isFirstBottle ? next.Sat < rules.PerBottle : BrewMath.TierOf(rules, next) == tier;
     }
 }
 

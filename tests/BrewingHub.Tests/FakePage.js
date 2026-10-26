@@ -75,6 +75,23 @@ var FakeElement = class {
 
   get firstChild() { return this.children.length ? this.children[0] : null; }
 
+  get lastElementChild() {
+    for (var i = this.children.length - 1; i >= 0; i--) if (this.children[i].tagName !== '#text') return this.children[i];
+
+    return null;
+  }
+
+  get childElementCount() { return this.children.filter(function (child) { return child.tagName !== '#text'; }).length; }
+
+  // On a page: under a document's head or body, which are the roots here.
+  get isConnected() {
+    var top = this;
+
+    while (top.parentElement) top = top.parentElement;
+
+    return top.isRoot === true;
+  }
+
   get nextSibling() { return this.sibling(1); }
 
   get previousSibling() { return this.sibling(-1); }
@@ -253,6 +270,8 @@ var FakeElement = class {
   }
 
   querySelectorAll(selector) {
+    searches++;
+
     return descendantsOf([this]).filter(function (element) { return element.matches(selector); });
   }
 
@@ -260,6 +279,10 @@ var FakeElement = class {
     return this.querySelectorAll(selector)[0] || null;
   }
 };
+
+// Every search of a page (querySelector, querySelectorAll, getElementById), so a test can see a check that searched
+// nothing.
+var searches = 0;
 
 // Compound selectors of a tag, classes, ids and attributes ("iframe", ".ch-hud-btn", "[data-act]"); the script uses
 // nothing else.
@@ -311,6 +334,8 @@ var FakeDocument = class {
   constructor() {
     this.head = new FakeElement('head');
     this.body = new FakeElement('body');
+    this.head.isRoot = true;
+    this.body.isRoot = true;
   }
 
   createElement(tagName) { return new FakeElement(tagName); }
@@ -328,10 +353,14 @@ var FakeDocument = class {
   createDocumentFragment() { return new FakeElement('#fragment'); }
 
   getElementById(id) {
+    searches++;
+
     return descendantsOf([this.head, this.body]).filter(function (element) { return element.id === id; })[0] || null;
   }
 
   querySelectorAll(selector) {
+    searches++;
+
     return descendantsOf([this.head, this.body]).filter(function (element) { return element.matches(selector); });
   }
 

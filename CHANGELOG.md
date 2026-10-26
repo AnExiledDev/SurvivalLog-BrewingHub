@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- The brewing screen no longer stutters while it is open, and loading a save or switching the language no longer freezes the game for a moment. The screen also stops redrawing when nothing on it has changed.
+
 ## 0.1.4
 
 - Less stutter: while the brewing screen is closed, the mod only checks your barrels, instead of reading every food in your storages every few seconds.

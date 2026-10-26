@@ -34,6 +34,12 @@ public sealed record Ingredient(int Id, string Name, string? Icon, double Sat, d
     public double Quality => Sat > 0 ? Mood / Sat : 0;
 }
 
+/// <summary>
+/// One brewable row of the item table as the catalog reads it: name, the icon the table names, satiety and morale for a
+/// whole item, and the hours it keeps (null when it never spoils).
+/// </summary>
+public sealed record FoodRow(int Id, string Name, string? IconName, double Sat, double Mood, double? LifeHours);
+
 /// <summary>A drink the barrel makes: its tier (0 Poor, 1 Average, 2 Strong) and its item.</summary>
 public sealed record Drink(int Tier, int ItemId, string Name, string? Icon, string Description, IReadOnlyList<Use> UsedIn, int Asks);
 
