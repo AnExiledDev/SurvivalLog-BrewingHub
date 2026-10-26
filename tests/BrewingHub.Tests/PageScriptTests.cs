@@ -348,6 +348,68 @@ public class PageScriptTests
         Assert.Contains("Words in another language", page.Text("shown('#bhView')"));
     }
 
+    // ===== UI size (Exiled's Toolkit) =====
+
+    /// <summary>The Toolkit's ExiledUi as far as a mod sees it: the panels handed to it and their options.</summary>
+    private const string FakeUi = "var handed = []; window.ExiledUi = { size: function (el, options) { handed.push({ el: el, options: options }); } }";
+
+    [Fact]
+    public void The_hub_column_is_drawn_at_the_ui_size_as_big_as_the_whole_brewing_screen_still_fits()
+    {
+        var page = new PageScript();
+
+        page.Run(FakeUi);
+        page.OpenBrewing();
+        page.Catalog(BrewView.Catalog(Book));
+        page.Brew(StateOf(Stocked()));
+        page.Poll();
+        page.Poll();
+
+        Assert.Equal(1, page.Count("handed"));
+        Assert.True(page.Is("handed[0].el === brewPage().getElementById('bhCol')"));
+        Assert.True(page.Is("handed[0].options.fit === brewPage().querySelector('.brew-system')"));
+    }
+
+    [Fact]
+    public void A_new_ui_size_tells_the_game_to_find_its_buttons_again()
+    {
+        var page = new PageScript();
+
+        page.Run(FakeUi);
+        page.OpenBrewing();
+        page.Catalog(BrewView.Catalog(Book));
+        page.Brew(StateOf(Stocked()));
+        page.Poll();
+        page.Run("handed[0].options.onZoom(1.5)");
+
+        Assert.Equal("1", page.Text("brewFrame().contentWindow.scrolls"));
+    }
+
+    [Fact]
+    public void A_brewing_screen_the_game_builds_anew_hands_its_new_hub_column_over_too()
+    {
+        var page = new PageScript();
+
+        page.Run(FakeUi);
+        page.OpenBrewing();
+        page.Catalog(BrewView.Catalog(Book));
+        page.Brew(StateOf(Stocked()));
+        page.Poll();
+        page.Run("brewFrame().remove(); openBrewing()");
+        page.Poll();
+
+        Assert.Equal(2, page.Count("handed"));
+        Assert.True(page.Is("handed[1].el === brewPage().getElementById('bhCol')"));
+    }
+
+    [Fact]
+    public void The_hub_column_waits_for_the_toolkit_when_its_script_has_not_loaded_yet()
+    {
+        var page = Opened(Stocked());
+
+        Assert.True(page.Is("window.__exiledUiWait[0][0] === brewPage().getElementById('bhCol')"));
+    }
+
     [Fact]
     public void Scrolling_the_hub_list_tells_the_game_to_find_its_buttons_again()
     {

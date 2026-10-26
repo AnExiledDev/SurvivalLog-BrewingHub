@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.7
+
+- The Brewing Hub column on the brewing screen can be drawn bigger or smaller with the UI size setting of Exiled's Toolkit 0.10.0 or newer. A change shows at once, and the column only grows as far as the whole brewing screen still fits.
+- Made for Survival Log 1.1.19611.
+
 ## 0.1.6
 
 - Fixed: the search box on the brewing screen now accepts Chinese and other typing that needs an input method.

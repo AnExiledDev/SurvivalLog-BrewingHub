@@ -13,6 +13,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a fourth colu
 - **Collect and brew again**: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken, by any means. The switch lasts until you leave the game.
 - **Put bottles away** (setting `PutBottlesAway`, off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.
 - With Exiled's Toolkit, a barrel finishing and a barrel brewing again show as toasts.
+- With Exiled's Toolkit 0.10.0 or newer, its UI size setting (`UiScale`) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. The quality line, nudges and buttons inside the game's own columns keep the game's size.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
@@ -21,7 +22,7 @@ Brewing Hub adds nothing to your save and does not edit game files. You can remo
 - Survival Log 1.1.19611. Built for this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
 - Optional: [Stacking](https://www.nexusmods.com/survivallog/mods/74). Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking wants it. Without Stacking, nothing changes.
-- Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, settings changed on the Mod Manager's Mods screen take effect without restarting the game, and barrel notices show as toasts. Without it, settings take effect at the next game start.
+- Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, settings changed on the Mod Manager's Mods screen take effect without restarting the game, and barrel notices show as toasts. With 0.10.0 or newer, its UI size setting also sizes the Brewing Hub column. Without it, settings take effect at the next game start.
 
 ## Install
 
@@ -43,7 +44,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.6 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.7 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 

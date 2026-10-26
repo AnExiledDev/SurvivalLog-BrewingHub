@@ -458,6 +458,16 @@
       + '<div class="bh-view" id="bhView"></div>';
     col.addEventListener('click', onClick);
     system.appendChild(col);
+    // Drawn at the player's UI size (Exiled's Toolkit), as big as the whole brewing screen still fits. The boxes added
+    // inside the game's own columns keep the game's size, like the text around them. A zoom moves the game's buttons.
+    uiSize(col, {
+      fit: system,
+      onZoom: function () {
+        try {
+          win.dispatchEvent(new win.Event('scroll'));
+        } catch (e) {}
+      }
+    });
 
     var search = col.querySelector('#bhSearch');
 
@@ -479,6 +489,19 @@
     });
 
     return col;
+  }
+
+  // Hands a panel to Exiled's Toolkit to be drawn at the player's UI size. Before the Toolkit's script has loaded it
+  // waits in a list the Toolkit reads; without the Toolkit nothing happens.
+  function uiSize(el, options) {
+    var ui = window.ExiledUi;
+    if (ui) {
+      ui.size(el, options);
+      return;
+    }
+    var waiting = window.__exiledUiWait = window.__exiledUiWait || [];
+    waiting.push([el, options]);
+    if (waiting.length > 32) waiting.shift();
   }
 
   function drawColumn(doc, col) {
