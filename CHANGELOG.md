@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3
+
+- Fixed: Load could take food out of a stove that was cooking, which stopped that stove. Food in a stove is no longer used.
+
 ## 0.1.2
 
 - Fixed: Load could put too much in the barrel when a stack couldn't be split. It now moves what fits and tells you how much went in.
