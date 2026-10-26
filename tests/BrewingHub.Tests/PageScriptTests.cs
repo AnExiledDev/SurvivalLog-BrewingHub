@@ -302,6 +302,22 @@ public class PageScriptTests
     }
 
     [Fact]
+    public void A_brewing_screen_the_game_builds_anew_gets_the_hub_again()
+    {
+        var page = Opened(Stocked());
+
+        page.Run("brewFrame().remove(); openBrewing()");
+        page.Poll();
+
+        Assert.True(page.Is("brewPage().querySelector('.brew-system #bhCol')"));
+
+        page.Run("var reloaded = openBrewing(), frame = brewFrame(); frame.contentDocument = reloaded.contentDocument; frame.contentWindow = reloaded.contentWindow; reloaded.remove()");
+        page.Poll();
+
+        Assert.True(page.Is("brewPage().querySelector('.brew-system #bhCol')"));
+    }
+
+    [Fact]
     public void One_food_changing_redraws_only_its_own_row()
     {
         var game = Stocked();
