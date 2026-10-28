@@ -2,6 +2,8 @@ Name: Brewing Hub
 Summary: A better brewing barrel screen: the best barrel of each drink from your food, the quality and bottles as you fill, one-click changes for a better drink or one more bottle, and Load from your storages. Also lists every drink and what it is for, each food's numbers and every barrel in your base, with Collect and brew again. English and Chinese.
 
 Description (BBCode):
+[center][img]https://sldb.core-directive.com/media/save/1-save-safe.png[/img][/center]
+
 Know what a barrel will brew before you start it. Brewing Hub adds a column to the game's brewing barrel screen with the best barrel of each drink you can make from your bag and home storages, the drinks and what they are for, every brewable food's numbers, and every barrel in your base. As you fill a barrel it shows the quality, the drink, the bottles and the brewing time, with one-click changes that make a better drink or one more bottle.
 
 [size=5]Main features[/size]
