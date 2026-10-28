@@ -38,6 +38,12 @@ internal sealed class BrewLog
             // The file copy below still has a chance.
         }
 
+        WriteFileOnly(message);
+    }
+
+    /// <summary>The file alone, for a worker thread: the BepInEx console is left to the game's thread.</summary>
+    public void WriteFileOnly(string message)
+    {
         if (!IsFileOn) return;
 
         lock (_gate) AppendToFile($"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} {message}");

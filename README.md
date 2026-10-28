@@ -44,7 +44,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.7 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.1.8 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 

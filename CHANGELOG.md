@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.8
+
+- Less stutter the first time you open a brewing barrel after starting the game: Brewing Hub now gets ready in the background while the game loads.
+- Made for Survival Log 1.1.19611.
+
 ## 0.1.7
 
 - The Brewing Hub column on the brewing screen can be drawn bigger or smaller with the UI size setting of Exiled's Toolkit 0.10.0 or newer. A change shows at once, and the column only grows as far as the whole brewing screen still fits.
