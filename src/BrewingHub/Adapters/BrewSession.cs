@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BrewingHub.Core;
+using ExiledToolkit;
 using UnityEngine;
 
 namespace BrewingHub.Adapters;
@@ -20,7 +21,6 @@ internal sealed class BrewSession
 
     private readonly IBrewGame _game;
     private readonly WebPage _page;
-    private readonly Func<string, bool, bool> _toast;
     private readonly Func<int, (string Place, int Bottles)?> _putAway;
     private readonly Func<bool> _isBrewScreenOpen;
     private readonly Func<bool, BrewRead> _readScreen;
@@ -47,11 +47,10 @@ internal sealed class BrewSession
     /// readScreen is the refresh's read: the barrels alone with the screen closed (false), what the open screen shows
     /// otherwise. prepare runs once a frame for work spread over frames.
     /// </summary>
-    public BrewSession(IBrewGame game, WebPage page, Func<string, bool, bool> toast, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Func<bool, BrewRead> readScreen, Action prepare, Action<string> log)
+    public BrewSession(IBrewGame game, WebPage page, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Func<bool, BrewRead> readScreen, Action prepare, Action<string> log)
     {
         _game = game;
         _page = page;
-        _toast = toast;
         _putAway = putAway;
         _isBrewScreenOpen = isBrewScreenOpen;
         _readScreen = readScreen;
@@ -114,7 +113,7 @@ internal sealed class BrewSession
         catch (Exception ex)
         {
             _log($"page command {command} failed: {ex}");
-            _page.Status(Texts.Failed.Pick(IsChinese));
+            _page.Status(Texts.Failed.Pick(IsChinese), ToastKind.Error);
         }
     }
 
@@ -306,11 +305,11 @@ internal sealed class BrewSession
         return Texts.BottlesStored.Say(IsChinese, stored.Bottles, drink, stored.Place);
     }
 
-    /// <summary>A toast when Exiled's Toolkit can show one, else the page's own line.</summary>
+    /// <summary>A barrel notice as an Exiled's Toolkit toast; one that needs the player's eye shows as a warning.</summary>
     private void Tell(string text, bool isWarning)
     {
         _log(text);
-        if (!_toast(text, isWarning)) _page.Status(text);
+        _page.Toast(text, isWarning ? ToastKind.Warning : ToastKind.Success);
     }
 
     /// <summary>A barrel's id means nothing in another save, so what is kept per barrel goes when the game is left.</summary>
@@ -339,7 +338,7 @@ internal sealed class BrewSession
             _log($"{name} failed: {ex}");
         }
 
-        _page.Status(message);
+        _page.Status(message, message == Texts.Failed.Pick(IsChinese) ? ToastKind.Error : ToastKind.Info);
         Refresh(Time.unscaledTime);
     }
 }

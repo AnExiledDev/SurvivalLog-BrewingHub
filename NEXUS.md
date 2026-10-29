@@ -17,7 +17,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 [*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
 [*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.[/*]
 [/list]
-With Exiled's Toolkit, you get a notice when a barrel finishes or starts brewing again. With Exiled's Toolkit 0.10.0 or newer, its UI size setting (UiScale) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. With 0.11.0 or newer, Brewing Hub's own UiScale setting can set a size for this mod alone.
+You get a notice when a barrel finishes or starts brewing again. Exiled's Toolkit's UI size setting (UiScale) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. Brewing Hub's own UiScale setting can set a size for this mod alone.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
@@ -31,12 +31,13 @@ Works in English and Chinese.
 [*]Survival Log 1.1.19611. A game update can break it until the mod is updated.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
 [*]Optional: [url=https://www.nexusmods.com/survivallog/mods/74]Stacking[/url]. Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking wants it. Without Stacking, nothing changes.[/*]
-[*]Optional: [url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 or newer. With it, settings changed on the Mod Manager's Mods screen take effect without restarting the game, and barrel notices show as toasts. With 0.10.0 or newer, its UI size setting also sizes the Brewing Hub column. Without it, settings take effect at the next game start.[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 or newer. Brewing Hub does not load without it. It shows Brewing Hub's messages as toasts, applies settings changed on the Mod Manager's Mods screen without a restart, and its UI size setting sizes the Brewing Hub column.[/*]
 [/list]
 
 [size=5]Installation[/size]
 [list=1]
 [*]Install [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i](if no other mods were installed before, start the game once so BepInEx finishes setup, then quit)[/i].[/*]
+[*]Install Exiled's Toolkit the same way.[/*]
 [*]Download the zip from the Files tab.[/*]
 [*]Extract it into the game folder (the folder with [font=Courier New]SurvivalLog.exe[/font]). The zip holds a BepInEx folder, so the DLL lands in the right place. When asked, merge the folders. The result should be:
 [code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\BrewingHub.dll[/code][/*]
@@ -71,7 +72,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 [*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶，并为同一种酒重新装桶、开始酿造。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
 [*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出一桶酒时，背包里所有这种酒都会移到已经放有这种酒的家中储物里。[/*]
 [/list]
-安装 Exiled's Toolkit 后，酒桶酿好或重新开始酿造时会弹出提示。安装 Exiled's Toolkit 0.10.0 或更新版本后，可以用它的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。0.11.0 或更新版本还可以用 Brewing Hub 自己的 UiScale 设置单独调整本模组的大小。
+酒桶酿好或重新开始酿造时会弹出提示。可以用 Exiled's Toolkit 的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。还可以用 Brewing Hub 自己的 UiScale 设置单独调整本模组的大小。
 
 Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，可以随时移除。
 
@@ -84,12 +85,13 @@ Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，�
 [*]Survival Log 1.1.19611。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
 [*]可选：[url=https://www.nexusmods.com/survivallog/mods/74]Stacking[/url]。Brewing Hub 会按 Stacking 的规则，把它变成可堆叠的食材一份一份放入桶中。未安装 Stacking 时不受影响。[/*]
-[*]可选：[url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 或更新版本。安装后，在 Mod Manager 的模组界面修改的设置无需重启游戏即可生效，酿酒桶的通知也会弹出提示；0.10.0 或更新版本还能用界面大小设置调整 Brewing Hub 这一栏的大小。未安装时，设置在下次启动游戏时生效。[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 或更新版本。没有它本模组不会加载。它把 Brewing Hub 的消息显示为弹出提示，让在 Mod Manager 的模组界面修改的设置无需重启游戏即可生效，它的界面大小设置还能调整 Brewing Hub 这一栏的大小。[/*]
 [/list]
 
 [size=5]安装[/size]
 [list=1]
 [*]安装 [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i]（如果之前没有装过其他模组，先启动一次游戏，让 BepInEx 完成初始化，然后退出）[/i]。[/*]
+[*]用同样的方式安装 Exiled's Toolkit。[/*]
 [*]在「文件」页下载压缩包。[/*]
 [*]把压缩包解压到游戏目录（[font=Courier New]SurvivalLog.exe[/font] 所在的文件夹）。压缩包里带有 BepInEx 文件夹，DLL 会自动放到正确位置。如果提示合并文件夹，选择合并。解压后应为：
 [code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\BrewingHub.dll[/code][/*]

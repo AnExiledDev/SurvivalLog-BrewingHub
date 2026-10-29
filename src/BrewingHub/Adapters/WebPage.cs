@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using BrewingHub.Core;
+using ExiledToolkit;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.ReduxUI;
 using Vuplex.WebView;
@@ -47,8 +48,20 @@ internal sealed class WebPage
     /// <summary>The page lost its script, or loaded it afresh, so its words go with the next call.</summary>
     public void ForgetWords() => _wordsAreChinese = null;
 
-    /// <summary>A result line, shown as a toast over the game.</summary>
-    public void Status(string text) => Call($"status({JsText.Literal(text)})");
+    /// <summary>What a press did, as an Exiled's Toolkit toast. The page hears it too, as it frees the pressed button.</summary>
+    public void Status(string text, ToastKind kind)
+    {
+        Call($"status({JsText.Literal(text)})");
+        Toast(text, kind);
+    }
+
+    /// <summary>A message as an Exiled's Toolkit toast, without touching the page.</summary>
+    public void Toast(string text, ToastKind kind)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+
+        if (Toasts.Show(new ToastRequest(Texts.ToastSource.Pick(GameLanguage.IsChinese()), text) { Kind = kind }).IsNone) _log("a toast was not shown: " + text);
+    }
 
     /// <summary>Brewable foods, drinks, and names and icons of the items they name; the state refers to them by id only.</summary>
     public bool Catalog(string catalogJson) => Call($"catalog({catalogJson})");

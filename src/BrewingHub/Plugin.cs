@@ -8,18 +8,16 @@ using HarmonyLib;
 namespace BrewingHub;
 
 [BepInPlugin(Guid, "Brewing Hub", Version)]
-[BepInDependency(OptionalLive.ToolkitGuid, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(OptionalLive.ToolkitGuid, OptionalLive.ToolkitVersion)]
 [BepInDependency(StackingGuid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.2.0";
+    private const string Version = "0.2.1";
     private const string StackingGuid = "com.dev.survivallog.stacking";
 
     public override void Load()
     {
-        if (!OptionalLive.IsToolkitInstalled) Log.LogInfo(OptionalLive.MissingNote);
-
         OptionalUiSize.Bind(Config);
 
         var isSpoilingFirst = Config.Bind("General", "FillSpoilingFirst", true,
@@ -34,11 +32,9 @@ public sealed class Plugin : BasePlugin
         var log = new BrewLog(Log, Path.Combine(Paths.BepInExRootPath, "brewing-hub.log"));
         var harmony = new Harmony(Guid);
         var game = new GameBrewing(log.Write);
-        var toasts = new BrewToasts(log.Write);
         var session = new BrewSession(
             game,
             new WebPage(log.Write),
-            (text, isWarning) => toasts.Show(text, isWarning, GameLanguage.IsChinese()),
             game.PutAway,
             game.IsBrewScreenOpen,
             game.ReadScreen,

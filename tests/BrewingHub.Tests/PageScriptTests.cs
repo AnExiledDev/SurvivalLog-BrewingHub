@@ -87,7 +87,18 @@ public class PageScriptTests
         page.Click("act('load', 1)");
 
         Assert.Equal(new PageCommand.Load(1), page.Sent[^1]);
-        Assert.Contains("The barrel is filled for Wine.", page.Text("document.getElementById('bh-toast').textContent"));
+    }
+
+    /// <summary>A press result is the plugin's Toolkit toast, so the page draws no notice of its own.</summary>
+    [Fact]
+    public void A_press_result_draws_nothing_on_the_page()
+    {
+        var page = Opened(Stocked());
+
+        page.Status("The barrel is filled for Wine.");
+
+        Assert.False(page.Is("document.getElementById('bh-toast')"));
+        Assert.False(page.Is("document.body.textContent.indexOf('The barrel is filled for Wine.') >= 0"));
     }
 
     [Fact]
