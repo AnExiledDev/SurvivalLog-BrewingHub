@@ -494,6 +494,7 @@
   // Hands a panel to Exiled's Toolkit to be drawn at the player's UI size. Before the Toolkit's script has loaded it
   // waits in a list the Toolkit reads; without the Toolkit nothing happens.
   function uiSize(el, options) {
+    options = Object.assign({ mod: 'BrewingHub' }, options);
     var ui = window.ExiledUi;
     if (ui) {
       ui.size(el, options);

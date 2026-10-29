@@ -366,6 +366,7 @@ public class PageScriptTests
         page.Poll();
 
         Assert.Equal(1, page.Count("handed"));
+        Assert.Equal(1, page.Count("handed.filter(function (h) { return h.options.mod === 'BrewingHub'; })"));
         Assert.True(page.Is("handed[0].el === brewPage().getElementById('bhCol')"));
         Assert.True(page.Is("handed[0].options.fit === brewPage().querySelector('.brew-system')"));
     }

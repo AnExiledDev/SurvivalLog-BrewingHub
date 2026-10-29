@@ -13,7 +13,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a fourth colu
 - **Collect and brew again**: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken, by any means. The switch lasts until you leave the game.
 - **Put bottles away** (setting `PutBottlesAway`, off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.
 - With Exiled's Toolkit, a barrel finishing and a barrel brewing again show as toasts.
-- With Exiled's Toolkit 0.10.0 or newer, its UI size setting (`UiScale`) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. The quality line, nudges and buttons inside the game's own columns keep the game's size.
+- With Exiled's Toolkit 0.10.0 or newer, its UI size setting (`UiScale`) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. The quality line, nudges and buttons inside the game's own columns keep the game's size. With Toolkit 0.11.0 or newer, Brewing Hub's own `UiScale` under Interface sets a size for this mod alone; at 0, the default, it follows the Toolkit's.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 

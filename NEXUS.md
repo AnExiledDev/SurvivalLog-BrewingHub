@@ -17,7 +17,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 [*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
 [*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.[/*]
 [/list]
-With Exiled's Toolkit, you get a notice when a barrel finishes or starts brewing again. With Exiled's Toolkit 0.10.0 or newer, its UI size setting (UiScale) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits.
+With Exiled's Toolkit, you get a notice when a barrel finishes or starts brewing again. With Exiled's Toolkit 0.10.0 or newer, its UI size setting (UiScale) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. With 0.11.0 or newer, Brewing Hub's own UiScale setting can set a size for this mod alone.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
@@ -71,7 +71,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 [*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶，并为同一种酒重新装桶、开始酿造。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
 [*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出一桶酒时，背包里所有这种酒都会移到已经放有这种酒的家中储物里。[/*]
 [/list]
-安装 Exiled's Toolkit 后，酒桶酿好或重新开始酿造时会弹出提示。安装 Exiled's Toolkit 0.10.0 或更新版本后，可以用它的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。
+安装 Exiled's Toolkit 后，酒桶酿好或重新开始酿造时会弹出提示。安装 Exiled's Toolkit 0.10.0 或更新版本后，可以用它的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。0.11.0 或更新版本还可以用 Brewing Hub 自己的 UiScale 设置单独调整本模组的大小。
 
 Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，可以随时移除。
 

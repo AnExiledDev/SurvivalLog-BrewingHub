@@ -13,12 +13,14 @@ namespace BrewingHub;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.1.8";
+    private const string Version = "0.2.0";
     private const string StackingGuid = "com.dev.survivallog.stacking";
 
     public override void Load()
     {
         if (!OptionalLive.IsToolkitInstalled) Log.LogInfo(OptionalLive.MissingNote);
+
+        OptionalUiSize.Bind(Config);
 
         var isSpoilingFirst = Config.Bind("General", "FillSpoilingFirst", true,
             "When true, Load and the one-click adds fill the barrel with the food closest to spoiling first. When false, they use the freshest food first.\n" +
