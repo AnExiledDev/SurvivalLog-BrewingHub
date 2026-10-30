@@ -28,7 +28,7 @@ Works in English and Chinese.
 
 [size=5]Requirements[/size]
 [list]
-[*]Survival Log 1.1.19611. A game update can break it until the mod is updated.[/*]
+[*]Survival Log 1.1.20151. A game update can break it until the mod is updated.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
 [*]Optional: [url=https://www.nexusmods.com/survivallog/mods/74]Stacking[/url]. Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking wants it. Without Stacking, nothing changes.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 or newer. Brewing Hub does not load without it. It shows Brewing Hub's messages as toasts, applies settings changed on the Mod Manager's Mods screen without a restart, and its UI size setting sizes the Brewing Hub column.[/*]
@@ -82,7 +82,7 @@ Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，�
 
 [size=5]前置要求[/size]
 [list]
-[*]Survival Log 1.1.19611。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
+[*]Survival Log 1.1.20151。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
 [*]可选：[url=https://www.nexusmods.com/survivallog/mods/74]Stacking[/url]。Brewing Hub 会按 Stacking 的规则，把它变成可堆叠的食材一份一份放入桶中。未安装 Stacking 时不受影响。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 或更新版本。没有它本模组不会加载。它把 Brewing Hub 的消息显示为弹出提示，让在 Mod Manager 的模组界面修改的设置无需重启游戏即可生效，它的界面大小设置还能调整 Brewing Hub 这一栏的大小。[/*]

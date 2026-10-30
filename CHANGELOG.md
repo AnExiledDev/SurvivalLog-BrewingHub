@@ -4,7 +4,7 @@
 
 - Brewing Hub's messages (what a button did, barrel notices) now all show as Exiled's Toolkit toasts. Those toasts also go to the Notifications history.
 - Exiled's Toolkit 0.11.0 or newer is now required.
-- Made for Survival Log 1.1.19611.
+- Made for Survival Log 1.1.20151.
 
 ## 0.2.0
 
