@@ -1,4 +1,6 @@
 using BrewingHub.Core;
+using ExiledToolkit.Kit;
+using ExiledToolkit.Web;
 using Xunit;
 using static BrewingHub.Tests.FakeGame;
 
@@ -15,62 +17,6 @@ public class RefreshCostTests
     {
         Stock = { S(1, Berry, 30), S(2, Mushroom, 20, owner: Chest, hours: 10), S(3, Stew, 2) },
     };
-
-    private static IEnumerable<bool> Steps(List<string> done)
-    {
-        foreach (var name in new[] { "productions", "requests", "names", "foods", "icons" })
-        {
-            done.Add(name);
-
-            yield return true;
-        }
-    }
-
-    [Fact]
-    public void A_job_cut_into_the_smallest_slices_ends_with_what_one_long_slice_does()
-    {
-        var whole = new List<string>();
-        var sliced = new List<string>();
-
-        Assert.True(new SlicedJob(Steps(whole)).Advance(() => false));
-
-        var job = new SlicedJob(Steps(sliced));
-        var slices = 1;
-
-        while (!job.Advance(() => true)) slices++;
-
-        Assert.Equal(whole, sliced);
-        Assert.True(slices >= whole.Count, $"{slices} slices for {whole.Count} steps");
-    }
-
-    [Fact]
-    public void A_step_waiting_on_other_work_holds_the_rest_for_the_next_frame()
-    {
-        var isReady = false;
-        var done = new List<string>();
-
-        IEnumerable<bool> Waiting()
-        {
-            done.Add("read");
-
-            while (!isReady) yield return false;
-
-            done.Add("build");
-
-            yield return true;
-        }
-
-        var job = new SlicedJob(Waiting());
-
-        Assert.False(job.Advance(() => false));
-        Assert.False(job.Advance(() => false));
-        Assert.Equal(new[] { "read" }, done);
-
-        isReady = true;
-
-        Assert.True(job.Advance(() => false));
-        Assert.Equal(new[] { "read", "build" }, done);
-    }
 
     /// <summary>The game tables for three drinks, a recipe that takes Beer, two requests and a few foods.</summary>
     private sealed class Tables : ICatalogTables

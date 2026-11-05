@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3
+
+- **Warning:** now uses Exiled's Toolkit for its shared parts, so it needs Exiled's Toolkit 0.19.0 or newer. Update the Toolkit first.
+- Made for Survival Log 1.1.20719.
+
 ## 0.2.2
 
 - Fixed for the 1.1.20719 game update: a barrel now starts once it holds one bottle's worth of satiety, the same as the game. With a bottle yield talent that is less than before, and Brewing Hub no longer holds back a brew the game would start.

@@ -19,8 +19,7 @@ internal static class CellarWarmUp
 
     private static readonly Type[] Adapters =
     {
-        typeof(BrewSession), typeof(GameBrewing), typeof(BrewTicker), typeof(WebPage), typeof(PageMessages),
-        typeof(StackingUnits), typeof(OptionalLive), typeof(WebIcons), typeof(WebKeyboard), typeof(GameLanguage), typeof(BrewLog),
+        typeof(BrewSession), typeof(GameBrewing), typeof(BrewTicker), typeof(BrewPage), typeof(StackingUnits),
     };
 
     public static void Start(Action<string> logFileOnly) =>

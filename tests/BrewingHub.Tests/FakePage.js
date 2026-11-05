@@ -1,6 +1,6 @@
-// Just enough of Root.html and the game's brewing barrel page (UI/BrewPanel/BrewPanel.html) for page.js to run in Jint: the root
-// document with its page iframes, the vuplex bridge, and clicks and other events that bubble. Test code only; nothing
-// here ships.
+// Just enough of Root.html and the game's brewing barrel page (UI/BrewPanel/BrewPanel.html) for page.js and Exiled's
+// Toolkit's page API (api.js) to run in Jint: the root document with its page iframes, the vuplex bridge, and clicks
+// and other events that bubble. Test code only; nothing here ships.
 var window = this;
 
 var location = { protocol: 'https:', href: 'https://game.local/Root.html' };
@@ -13,7 +13,7 @@ function setInterval(callback) {
   return intervals.length;
 }
 
-// One run of every interval the script set, which is how its 400 ms page check runs.
+// One run of every interval the scripts set, which is how the Toolkit's 250 ms page check runs.
 function poll() {
   intervals.slice().forEach(function (callback) { callback(); });
 }
@@ -331,11 +331,13 @@ function descendantsOf(roots) {
 }
 
 var FakeDocument = class {
-  constructor() {
+  // href is the page's address; the Toolkit's page check never hands over a document still at about:blank.
+  constructor(href) {
     this.head = new FakeElement('head');
     this.body = new FakeElement('body');
     this.head.isRoot = true;
     this.body.isRoot = true;
+    this.defaultView = { location: { href: href || 'about:blank' } };
   }
 
   createElement(tagName) { return new FakeElement(tagName); }
@@ -356,6 +358,11 @@ var FakeDocument = class {
     searches++;
 
     return descendantsOf([this.head, this.body]).filter(function (element) { return element.id === id; })[0] || null;
+  }
+
+  // The Toolkit's page check finds the page iframes this way; it is not one of page.js's searches, so it is not counted.
+  getElementsByTagName(tagName) {
+    return descendantsOf([this.head, this.body]).filter(function (element) { return element.tagName === tagName.toUpperCase(); });
   }
 
   querySelectorAll(selector) {
@@ -385,9 +392,10 @@ window.vuplex = {
 // raises are counted in scrolls.
 function openBrewing() {
   var frame = document.body.appendChild(new FakeElement('iframe'));
-  var doc = new FakeDocument();
+  var src = 'https://game.local/UI/BrewPanel/BrewPanel.html';
+  var doc = new FakeDocument(src);
 
-  frame.src = 'https://game.local/UI/BrewPanel/BrewPanel.html';
+  frame.src = src;
   frame.contentDocument = doc;
   doc.body.innerHTML = '<div class="brew-system">'
     + '<div class="col"><div class="col-t">Bag</div><div class="grid" id="bagGrid"></div></div>'

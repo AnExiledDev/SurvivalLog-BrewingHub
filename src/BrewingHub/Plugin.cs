@@ -1,24 +1,32 @@
-using System.IO;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using BrewingHub.Adapters;
-using BrewingHub.Core;
-using HarmonyLib;
+using ExiledToolkit;
+using ExiledToolkit.Kit;
 
 namespace BrewingHub;
 
 [BepInPlugin(Guid, "Brewing Hub", Version)]
-[BepInDependency(OptionalLive.ToolkitGuid, OptionalLive.ToolkitVersion)]
+[BepInDependency(ToolkitGuid, ToolkitVersion)]
 [BepInDependency(StackingGuid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.2.2";
+    private const string Version = "0.2.3";
+
+    /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and UI size all come from it.</summary>
+    private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
+    private const string ToolkitVersion = ">=0.19.0";
+
     private const string StackingGuid = "com.dev.survivallog.stacking";
+    private const string LogFileName = "brewing-hub.log";
+
+    /// <summary>The name the page script hands its panels to the Toolkit's UI size with.</summary>
+    private const string UiSizeName = "BrewingHub";
 
     public override void Load()
     {
-        OptionalUiSize.Bind(Config);
+        ModUiSize.Bind(Config, UiSizeName);
 
         var isSpoilingFirst = Config.Bind("General", "FillSpoilingFirst", true,
             "When true, Load and the one-click adds fill the barrel with the food closest to spoiling first. When false, they use the freshest food first.\n" +
@@ -29,23 +37,24 @@ public sealed class Plugin : BasePlugin
         var isLoggingToFile = Config.Bind("Diagnostics", "LogToFile", false, new BepInEx.Configuration.ConfigDescription(
             "When true, what Brewing Hub does is also written to BepInEx\\brewing-hub.log, which is kept between game starts. Turn it on when reporting a problem.\n" +
             "设为 true 时，Brewing Hub 的操作也会写入 BepInEx\\brewing-hub.log，该文件在重启游戏后保留。报告问题时再打开。", null, "ModManager.Advanced"));
-        var log = new BrewLog(Log, Path.Combine(Paths.BepInExRootPath, "brewing-hub.log"));
-        var harmony = new Harmony(Guid);
+        var log = new ModLog(Log, LogFileName);
+
+        // Before the first line, since the file copy is on until the setting says otherwise.
+        LiveSettings.Watch(isLoggingToFile, isOn => log.IsFileOn = isOn);
+
         var game = new GameBrewing(log.Write);
         var session = new BrewSession(
             game,
-            new WebPage(log.Write),
+            new BrewPage(log.Write),
             game.PutAway,
             game.IsBrewScreenOpen,
             game.ReadScreen,
             game.Prepare,
             log.Write);
 
-        OptionalLive.Watch(isLoggingToFile, isOn => log.IsFileOn = isOn);
         log.Write($"===== Brewing Hub {Version} started");
-        PageMessages.Apply(harmony, log.Write);
 
-        OptionalLive.Watch(() =>
+        LiveSettings.Watch(() =>
         {
             session.UseSettings(isSpoilingFirst.Value, isPuttingAway.Value);
             log.Write($"spoiling first {isSpoilingFirst.Value}, put bottles away {isPuttingAway.Value}");

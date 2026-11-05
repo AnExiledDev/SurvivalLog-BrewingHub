@@ -1,9 +1,14 @@
 // Brewing Hub's web half. Runs in Root.html, the document every game page iframe sits in. Adds a fourth column, a
-// quality line, nudges and buttons to the game's own brewing barrel screen. Talks to the plugin through vuplex.postMessage("slmod|brewinghub|<verb>") and is driven by window.__slbrewinghub.
+// quality line, nudges and buttons to the game's own brewing barrel screen. Talks to the plugin through Exiled's
+// Toolkit's page API (etk.send("slmod|brewinghub|", "<verb>")) and is driven by window.__slbrewinghub.
 (function () {
   if (window.__slbrewinghub) return;
 
   var PREFIX = 'slmod|brewinghub|';
+  // The name the plugin's own UI size setting is set under in the Toolkit.
+  var UI_SIZE_NAME = 'BrewingHub';
+  // The game's brewing barrel screen, by its iframe's address.
+  var BREW_PAGE = /BrewPanel\.html/;
   var STYLE_ID = 'bh-style';
   // Marks everything drawn on the brewing screen, so it can all be taken off again.
   var OURS = 'bh-ours';
@@ -21,13 +26,17 @@
   var ui = { tab: 'now', search: '', rawOnly: true, haveOnly: false, sort: 'quality' };
   var isBusy = false;
   var busyTimer = 0;
-  var hasReportedPageAccess = false;
+  // The Toolkit's page API (window.ExiledToolkit). The game can run its script after this one, so this stays null
+  // until it has; the brewing screen check and the messages to the plugin start then.
+  var etk = null;
+  // The Toolkit's check of the game's brewing screen, which hands each one shown to patchPage.
+  var brewWatch = null;
   // Bumped whenever what the screen shows may have changed: the plugin's data or words (dataVersion), or a tab,
   // filter, sort or search (uiVersion). An unchanged pair means the drawing would come out the same, so it is not built.
   var dataVersion = 0;
   var uiVersion = 0;
   var lastWords = null;
-  // The brewing screen's frame as last found, with the parts found and drawn in it; null until found again.
+  // The brewing screen the Toolkit last handed over, with the parts found and drawn in it; null until it hands one.
   var page = null;
   // The document something was drawn into, so closing the barrel clears it and an idle check does nothing at all.
   var drawnDoc = null;
@@ -42,10 +51,9 @@
     return text;
   }
 
+  // Through the Toolkit's bridge. Nothing goes before its page API is there; the page says it is ready once it is.
   function send(message) {
-    try {
-      if (window.vuplex) window.vuplex.postMessage(PREFIX + message);
-    } catch (e) {}
+    if (etk) etk.send(PREFIX, message);
   }
 
   // One press at a time: a double click would otherwise move food twice. Every press is answered by a status line,
@@ -153,21 +161,22 @@
     cat.drinks = (data && data.drinks) || [];
     cat.items = (data && data.items) || {};
     dataVersion++;
-    patchPagesSafely();
+    refreshPages();
   }
 
   // The open barrel and everything around it; drawn at once and kept up by the page check.
   function brew(data) {
     st = data || { show: false };
     dataVersion++;
-    patchPagesSafely();
+    refreshPages();
   }
 
   // ---------- game pages ----------
 
-  // The brewing screen is a same-origin iframe, so its document can be reached from here; polled because the game
-  // creates and drops that iframe whenever it likes. With no barrel open and nothing drawn, a check does nothing.
-  function patchPages() {
+  // The brewing screen is a same-origin iframe, so its document can be reached from here. The Toolkit hands it over at
+  // every check because the game creates and drops that iframe whenever it likes, and redraws its columns on its own.
+  // With no barrel open and nothing drawn, a check does nothing.
+  function patchPage(doc, frame) {
     var words = window.__slbrewinghubWords;
 
     if (words !== lastWords) {
@@ -184,61 +193,22 @@
       return;
     }
 
-    var found = findBrewPage();
-
-    if (found) draw(found);
+    draw(pageOf(doc, frame));
   }
 
-  // The frame found last time while the game keeps it (same frame, address and document); else searched for again.
-  function findBrewPage() {
-    if (page && page.frame.isConnected && (page.frame.src || '') === page.src && frameDocument(page.frame) === page.doc) return page;
+  // What was found and drawn in the brewing screen handed over last time, while it is the same document; else a fresh
+  // record for this one.
+  function pageOf(doc, frame) {
+    if (page && page.doc === doc) return page;
 
-    page = null;
+    page = { frame: frame, doc: doc, win: frame.contentWindow, parts: null, drawnData: -1, drawnUi: -1, bands: [null, null, null], bandData: -1, tint: {} };
 
-    var frames = document.querySelectorAll('iframe');
-
-    for (var i = 0; i < frames.length; i++) {
-      var src = frames[i].src || '';
-
-      if (!/BrewPanel\.html/.test(src)) continue;
-
-      var doc = frameDocument(frames[i]);
-
-      if (!doc) {
-        if (!hasReportedPageAccess) send('diag|cannot reach a game page document (root ' + location.protocol + ', iframe ' + src + ')');
-        hasReportedPageAccess = true;
-        continue;
-      }
-
-      page = { frame: frames[i], src: src, doc: doc, win: frames[i].contentWindow, parts: null, drawnData: -1, drawnUi: -1, bands: [null, null, null], bandData: -1, tint: {} };
-
-      return page;
-    }
-
-    return null;
+    return page;
   }
 
-  function frameDocument(frame) {
-    try {
-      return frame.contentDocument;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function patchPagesSafely() {
-    try {
-      patchPages();
-    } catch (e) {}
-  }
-
-  function addPageStyle(doc, id, css) {
-    if (doc.getElementById(id)) return;
-
-    var style = doc.createElement('style');
-    style.id = id;
-    style.textContent = css;
-    (doc.head || doc.body).appendChild(style);
+  // What the page draws from changed: every brewing screen shown is drawn now rather than at the next check.
+  function refreshPages() {
+    if (brewWatch) brewWatch.refresh();
   }
 
   // Classes the game's own stylesheet already gives this page (BrewPanel.html): its colours, its columns.
@@ -352,7 +322,7 @@
 
     if (!system || !vat || !tsec) return null;
 
-    addPageStyle(doc, STYLE_ID, PAGE_CSS);
+    etk.addStyle(doc, STYLE_ID, PAGE_CSS);
 
     p.parts = {
       system: system,
@@ -426,7 +396,8 @@
     system.appendChild(col);
     // Drawn at the player's UI size (Exiled's Toolkit), as big as the whole brewing screen still fits. The boxes added
     // inside the game's own columns keep the game's size, like the text around them. A zoom moves the game's buttons.
-    uiSize(col, {
+    etk.size(col, {
+      mod: UI_SIZE_NAME,
       fit: system,
       onZoom: function () {
         try {
@@ -444,7 +415,7 @@
     search.addEventListener('input', function () {
       ui.search = search.value;
       uiVersion++;
-      patchPagesSafely();
+      refreshPages();
     });
 
     // The game learns where its buttons are on a page change or a window scroll; a scroll inside the list is neither.
@@ -455,20 +426,6 @@
     });
 
     return col;
-  }
-
-  // Hands a panel to Exiled's Toolkit to be drawn at the player's UI size. Before the Toolkit's script has loaded it
-  // waits in a list the Toolkit reads; without the Toolkit nothing happens.
-  function uiSize(el, options) {
-    options = Object.assign({ mod: 'BrewingHub' }, options);
-    var ui = window.ExiledUi;
-    if (ui) {
-      ui.size(el, options);
-      return;
-    }
-    var waiting = window.__exiledUiWait = window.__exiledUiWait || [];
-    waiting.push([el, options]);
-    if (waiting.length > 32) waiting.shift();
   }
 
   function drawColumn(doc, col) {
@@ -553,7 +510,7 @@
     }
 
     uiVersion++;
-    patchPagesSafely();
+    refreshPages();
   }
 
   // ---------- additions to the game's own columns ----------
@@ -936,8 +893,14 @@
     return rows;
   }
 
-  setInterval(patchPagesSafely, 200);
+  // Runs once the Toolkit's page API is there: at once when its script ran first, else when it runs. The plugin sends
+  // everything again when the page says it is ready, so that waits until a message can reach it.
+  function startWithToolkit(api) {
+    etk = api;
+    brewWatch = etk.watchPages(BREW_PAGE, patchPage, { everyCheck: true });
+    send('ready');
+  }
 
   window.__slbrewinghub = { status: status, catalog: catalog, brew: brew };
-  send('ready');
+  (window.ExiledToolkitReady = window.ExiledToolkitReady || []).push(startWithToolkit);
 })();

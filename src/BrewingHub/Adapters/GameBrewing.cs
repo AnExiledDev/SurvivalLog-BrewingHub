@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using BrewingHub.Core;
+using ExiledToolkit.Game;
+using ExiledToolkit.Web;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
 using GameCore.HotUpdate.ReduxUI;
@@ -216,7 +218,7 @@ internal sealed class GameBrewing : IBrewGame
             var roleId = game.Value.Role.InstanceId;
             var blocked = furniture.CheckBrewHarvestBlocked(roleId);
 
-            if (blocked != 0) return new Collected(0, NonEmpty(Furniture.GetBrewHarvestBlockedText(blocked)) ?? Texts.CollectRefused.Pick(GameLanguage.IsChinese()));
+            if (blocked != 0) return new Collected(0, GameNames.NonEmpty(Furniture.GetBrewHarvestBlockedText(blocked)) ?? Texts.CollectRefused.Pick(GameLanguage.IsChinese()));
 
             var bottles = furniture.OnBrewHarvest(roleId);
 
@@ -345,7 +347,7 @@ internal sealed class GameBrewing : IBrewGame
         if (items == null) return new BrewRead.NotReady(Texts.ReadFailed.Pick(isChinese));
 
         var hour = world._GameTimeManager?.GetHour() ?? 0;
-        var now = UnityEngine.Time.unscaledTime;
+        var now = BrewTicker.Now();
         var roleId = role.InstanceId;
         var openId = mode == ReadMode.Barrels ? null : OpenBarrelId();
         var furnitures = BarrelFurnitures(agents, openId, now);
@@ -844,20 +846,9 @@ internal sealed class GameBrewing : IBrewGame
     }
 
     private static string ItemName(ConfigManager config, Config_Item item) =>
-        Translate(config, item.ItemName) ?? NonEmpty(item.ItemName_Local) ?? NonEmpty(item.ItemName) ?? $"Item {item.ID}";
+        GameNames.ItemName(config, item) ?? $"Item {item.ID}";
 
-    private static string? IconName(Config_Item item) => NonEmpty(item.WebIcon) ?? NonEmpty(item.Icon);
-
-    private static string? Translate(ConfigManager config, string? key)
-    {
-        if (string.IsNullOrEmpty(key)) return null;
-
-        var text = config.GetLocalTxt(key);
-
-        return string.IsNullOrEmpty(text) || text == key ? null : text;
-    }
-
-    private static string? NonEmpty(string? text) => string.IsNullOrWhiteSpace(text) ? null : text;
+    private static string? IconName(Config_Item item) => GameNames.NonEmpty(item.WebIcon) ?? GameNames.NonEmpty(item.Icon);
 
     private void ReportOnce(string operation, Exception ex)
     {
@@ -941,7 +932,7 @@ internal sealed class GameBrewing : IBrewGame
 
         public (string Name, string? IconName)? Item(int id) => ItemRow(id) is { } row ? (ItemName(_config, row), IconName(row)) : null;
 
-        public string Description(int id) => ItemRow(id) is { } row ? Translate(_config, row.ItemDes1) ?? "" : "";
+        public string Description(int id) => ItemRow(id) is { } row ? GameNames.Translate(_config, row.ItemDes1) ?? "" : "";
 
         private Config_Item? ItemRow(int id) => _config._Config_Item_Dict is { } table && table.TryGetValue(id, out var row) ? row : null;
     }
@@ -999,7 +990,7 @@ internal sealed class GameBrewing : IBrewGame
 
             if (furniture == null || rows == null || !rows.TryGetValue(furniture.AgentConfigId, out var row)) return null;
 
-            return Translate(_config, row?.Name);
+            return GameNames.Translate(_config, row?.Name);
         }
     }
 }

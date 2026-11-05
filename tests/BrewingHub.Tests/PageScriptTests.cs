@@ -415,7 +415,7 @@ public class PageScriptTests
     }
 
     [Fact]
-    public void The_hub_column_waits_for_the_toolkit_when_its_script_has_not_loaded_yet()
+    public void The_hub_column_waits_for_the_toolkits_ui_size_script_when_it_has_not_loaded_yet()
     {
         var page = Opened(Stocked());
 
@@ -430,5 +430,42 @@ public class PageScriptTests
         page.Run("fire(brewPage().getElementById('bhView'), 'scroll')");
 
         Assert.Equal("1", page.Text("brewFrame().contentWindow.scrolls"));
+    }
+
+    // ===== Load order: the game can run Brewing Hub's script before the Toolkit's =====
+
+    /// <summary>
+    /// The plugin sends everything again when the page says it is ready, so the page says so only once the Toolkit's
+    /// bridge can carry it, and then once.
+    /// </summary>
+    [Fact]
+    public void Before_the_toolkit_loads_the_page_waits_and_says_ready_once_it_does()
+    {
+        var page = new PageScript(isToolkitFirst: false);
+
+        Assert.Equal(0, page.Readies);
+
+        page.LoadToolkit();
+
+        Assert.Equal(1, page.Readies);
+    }
+
+    /// <summary>A barrel the plugin sent before the Toolkit's script ran is drawn on the open brewing screen as soon as it runs.</summary>
+    [Fact]
+    public void A_barrel_sent_before_the_toolkit_loads_is_drawn_once_it_does()
+    {
+        var page = new PageScript(isToolkitFirst: false);
+
+        page.OpenBrewing();
+        page.Catalog(BrewView.Catalog(Book));
+        page.Brew(StateOf(Stocked()));
+        page.Poll();
+
+        Assert.False(page.Is("brewPage().getElementById('bhCol')"));
+
+        page.LoadToolkit();
+
+        Assert.True(page.Is("brewPage().querySelector('.brew-system #bhCol')"));
+        Assert.True(page.Is("brewPage().querySelector('.vat-body #bhQuality')"));
     }
 }

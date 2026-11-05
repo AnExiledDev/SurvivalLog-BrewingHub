@@ -22,7 +22,7 @@ Brewing Hub adds nothing to your save and does not edit game files. You can remo
 - Survival Log 1.1.20719. Built for this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
 - Optional: [Stacking](https://www.nexusmods.com/survivallog/mods/74). Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking wants it. Without Stacking, nothing changes.
-- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.11.0 or newer. Brewing Hub does not load without it. It shows Brewing Hub's messages as toasts, applies settings changed on the Mod Manager's Mods screen without a restart, and its UI size setting sizes the Brewing Hub column.
+- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.19.0 or newer. Brewing Hub does not load without it. It shows Brewing Hub's messages as toasts, applies settings changed on the Mod Manager's Mods screen without a restart, and its UI size setting sizes the Brewing Hub column.
 
 ## Install
 
@@ -44,7 +44,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.2.2 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.2.3 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 
@@ -67,7 +67,7 @@ This is a BepInEx 6 IL2CPP plugin. It compiles against BepInEx and the game's IL
 dotnet build src/BrewingHub -c Release -p:GameDir="C:\path\to\Survival Log"
 ```
 
-`GameDir` is the game folder. The default in the project file is a local path you will almost certainly need to override. Compiling also needs Exiled's Toolkit 0.4.0 or newer: point `-p:ToolkitDll="C:\path\to\ExiledToolkit.dll"` at its DLL. Players don't need the Toolkit to run the mod. The output DLL is at `src\BrewingHub\bin\Release\BrewingHub.dll`.
+`GameDir` is the game folder. The default in the project file is a local path you will almost certainly need to override. Compiling also needs Exiled's Toolkit 0.19.0 or newer: point `-p:ToolkitDll="C:\path\to\ExiledToolkit.dll"` at its DLL. The output DLL is at `src\BrewingHub\bin\Release\BrewingHub.dll`.
 
 The unit tests cover the brewing math, the planner and the page script, and need nothing from the game:
 

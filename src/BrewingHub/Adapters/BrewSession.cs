@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using BrewingHub.Core;
 using ExiledToolkit;
-using UnityEngine;
+using ExiledToolkit.Game;
+using ExiledToolkit.Web;
 
 namespace BrewingHub.Adapters;
 
@@ -16,17 +17,18 @@ internal sealed class BrewSession
     private const float OpenRefreshSeconds = 0.5f;
     private const float ClosedRefreshSeconds = 5f;
 
-    /// <summary>How often the brewing screen is checked for opening or closing; the page itself looks five times a second.</summary>
+    /// <summary>How often the brewing screen is checked for opening or closing; the page itself looks four times a second.</summary>
     private const float ScreenCheckSeconds = 0.1f;
 
     private readonly IBrewGame _game;
-    private readonly WebPage _page;
+    private readonly BrewPage _page;
     private readonly Func<int, (string Place, int Bottles)?> _putAway;
     private readonly Func<bool> _isBrewScreenOpen;
     private readonly Func<bool, BrewRead> _readScreen;
     private readonly Action _prepare;
     private readonly StateFeed _feed;
     private readonly WebKeyboard _keyboard = new();
+    private readonly PageMailbox _messages = PageInbox.Listen(PageCommand.Prefix);
     private readonly Action<string> _log;
 
     private bool _isSpoilingFirst = true;
@@ -47,7 +49,7 @@ internal sealed class BrewSession
     /// readScreen is the refresh's read: the barrels alone with the screen closed (false), what the open screen shows
     /// otherwise. prepare runs once a frame for work spread over frames.
     /// </summary>
-    public BrewSession(IBrewGame game, WebPage page, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Func<bool, BrewRead> readScreen, Action prepare, Action<string> log)
+    public BrewSession(IBrewGame game, BrewPage page, Func<int, (string Place, int Bottles)?> putAway, Func<bool> isBrewScreenOpen, Func<bool, BrewRead> readScreen, Action prepare, Action<string> log)
     {
         _game = game;
         _page = page;
@@ -73,11 +75,14 @@ internal sealed class BrewSession
 
     public void Update()
     {
-        var now = Time.unscaledTime;
+        var now = BrewTicker.Now();
 
         _page.KeepInstalled(now);
 
-        while (PageMessages.TryTake(out var command)) HandleSafely(command);
+        while (_messages.TryTake(out var message))
+        {
+            if (PageCommand.Parse(message) is { } command) HandleSafely(command);
+        }
 
         _prepare();
 
@@ -339,6 +344,6 @@ internal sealed class BrewSession
         }
 
         _page.Status(message, message == Texts.Failed.Pick(IsChinese) ? ToastKind.Error : ToastKind.Info);
-        Refresh(Time.unscaledTime);
+        Refresh(BrewTicker.Now());
     }
 }
