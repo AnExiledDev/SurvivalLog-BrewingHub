@@ -5,22 +5,21 @@ namespace BrewingHub.Core;
 
 /// <summary>
 /// The barrel's rules as the game reads them, talents included: the two quality lines, satiety per bottle, the bottle
-/// cap, the least satiety a brew needs, and the hours a brew takes (a base, more per satiety, a cap, and the brewing
-/// speed talent's cut).
+/// cap, and the hours a brew takes (a base, more per satiety, a cap, and the brewing speed talent's cut). A brew
+/// starts once the barrel holds one bottle's worth of satiety.
 /// </summary>
 public sealed record Rules(
     double Low,
     double High,
     double PerBottle,
     int MaxBottles,
-    double MinSatiety,
     double HourBase,
     double HourPerSatiety,
     double HourMax,
     double SpeedCut)
 {
     /// <summary>The values the game ships with and falls back to (Brew_* global settings, no talents).</summary>
-    public static readonly Rules Shipped = new(0, 0.5, 25, 9, 25, 24, 0.48, 168, 0);
+    public static readonly Rules Shipped = new(0, 0.5, 25, 9, 24, 0.48, 168, 0);
 
     public double Capacity => MaxBottles * PerBottle;
 }

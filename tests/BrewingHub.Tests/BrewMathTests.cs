@@ -27,10 +27,20 @@ public class BrewMathTests
     }
 
     [Fact]
-    public void A_brew_needs_the_least_satiety_to_start()
+    public void A_brew_needs_one_bottle_of_satiety_to_start()
     {
         Assert.False(BrewMath.Of(Shipped, new Mix(24, 10, 3)).CanStart);
         Assert.True(BrewMath.Of(Shipped, new Mix(25, 10, 3)).CanStart);
+    }
+
+    [Fact]
+    public void A_bottle_yield_talent_lowers_the_satiety_a_brew_needs_to_start()
+    {
+        // Since game 1.1.20719 the barrel starts at one bottle's worth, talents included, not at a fixed 25.
+        var talented = Shipped with { PerBottle = 20 };
+
+        Assert.True(BrewMath.Of(talented, new Mix(20, 10, 2)).CanStart);
+        Assert.False(BrewMath.Of(talented, new Mix(19.9, 10, 2)).CanStart);
     }
 
     [Fact]

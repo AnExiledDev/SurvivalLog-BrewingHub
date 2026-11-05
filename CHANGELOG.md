@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Fixed for the 1.1.20719 game update: a barrel now starts once it holds one bottle's worth of satiety, the same as the game. With a bottle yield talent that is less than before, and Brewing Hub no longer holds back a brew the game would start.
+- Made for Survival Log 1.1.20719.
+
 ## 0.2.1
 
 - Brewing Hub's messages (what a button did, barrel notices) now all show as Exiled's Toolkit toasts. Those toasts also go to the Notifications history.

@@ -161,7 +161,7 @@ public static class BrewView
         json.WriteNumber("high", Round(rules.High));
         json.WriteNumber("per", Round(rules.PerBottle));
         json.WriteNumber("max", rules.MaxBottles);
-        json.WriteNumber("min", Round(rules.MinSatiety));
+        json.WriteNumber("min", Round(rules.PerBottle));
         json.WriteNumber("speed", Round(rules.SpeedCut));
         json.WriteEndObject();
     }

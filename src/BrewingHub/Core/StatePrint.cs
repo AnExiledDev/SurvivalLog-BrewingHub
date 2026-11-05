@@ -19,7 +19,6 @@ public static class StatePrint
         print.Add(rules.High);
         print.Add(rules.PerBottle);
         print.Add(rules.MaxBottles);
-        print.Add(rules.MinSatiety);
         print.Add(rules.HourBase);
         print.Add(rules.HourPerSatiety);
         print.Add(rules.HourMax);

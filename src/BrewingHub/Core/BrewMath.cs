@@ -17,10 +17,11 @@ public readonly record struct Mix(double Sat, double Mood, int Count)
 public sealed record Brew(double Sat, double Mood, double Quality, int Tier, int Bottles, bool CanStart, int Hours, double Wasted, double NextBottle, int Count);
 
 /// <summary>
-/// The barrel's arithmetic as Furniture.CalcBrewPreview does it (build 1.1.19611): quality is total morale over total
+/// The barrel's arithmetic as Furniture.CalcBrewPreview and OnBrewStart do it (build 1.1.20719): quality is total morale over total
 /// satiety; below the first line is Poor, below the second Average, else Strong; bottles are whole satiety-per-bottle
 /// lots, at least 1 and at most the cap; hours are a base plus more per satiety, capped, cut by the speed talent, and
-/// rounded the way Unity's Mathf.RoundToInt does (halves to even).
+/// rounded the way Unity's Mathf.RoundToInt does (halves to even). A brew starts once the barrel holds one bottle's
+/// worth of satiety.
 /// </summary>
 public static class BrewMath
 {
@@ -40,7 +41,7 @@ public static class BrewMath
     {
         var quality = mix.Sat > 0 ? mix.Mood / mix.Sat : 0;
         var bottles = Math.Min(rules.MaxBottles, Math.Max(1, (int)(mix.Sat / rules.PerBottle)));
-        var canStart = mix.Count > 0 && mix.Sat >= rules.MinSatiety;
+        var canStart = mix.Count > 0 && mix.Sat >= rules.PerBottle;
         var used = bottles * rules.PerBottle;
         var nextBottle = bottles < rules.MaxBottles ? used + rules.PerBottle - mix.Sat : 0;
 

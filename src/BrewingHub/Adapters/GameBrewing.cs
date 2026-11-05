@@ -649,7 +649,6 @@ internal sealed class GameBrewing : IBrewGame
             high,
             perBottle > 0 ? perBottle : shipped.PerBottle,
             maxBottles > 0 ? maxBottles : shipped.MaxBottles,
-            Furniture.GetBrewSetting("Brew_MinSatiety", (float)shipped.MinSatiety),
             Furniture.GetBrewSetting("Brew_HourBase", (float)shipped.HourBase),
             perSatiety ?? shipped.HourPerSatiety,
             Furniture.GetBrewSetting("Brew_HourMax", (float)shipped.HourMax),

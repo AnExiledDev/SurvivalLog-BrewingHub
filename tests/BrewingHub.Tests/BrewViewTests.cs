@@ -23,6 +23,15 @@ public class BrewViewTests
     }
 
     [Fact]
+    public void The_satiety_a_brew_needs_is_one_bottle_with_talents()
+    {
+        var game = new FakeGame();
+        game.Rules = game.Rules with { PerBottle = 20 };
+
+        Assert.Equal(20, State(game).GetProperty("rules").GetProperty("min").GetDouble());
+    }
+
+    [Fact]
     public void No_open_barrel_shows_nothing()
     {
         Assert.False(State(new FakeGame { OpenId = null }).GetProperty("show").GetBoolean());
