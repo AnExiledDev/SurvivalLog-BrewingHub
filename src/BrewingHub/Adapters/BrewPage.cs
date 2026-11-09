@@ -7,7 +7,7 @@ using ExiledToolkit.Web;
 namespace BrewingHub.Adapters;
 
 /// <summary>
-/// The mod's half that lives in the game's web UI: page.js, run in the root document the game's own pages sit in. It
+/// The mod's half that lives in the game's web UI: page.js, run in the root document the game's pages sit in. It
 /// draws Brewing Hub onto the game's brewing screen. The web view can reload at any time and lose the script, so
 /// Exiled's Toolkit checks for it every couple of seconds and the session puts it back when the page says it is missing.
 /// </summary>
@@ -56,6 +56,6 @@ internal sealed class BrewPage
     /// <summary>Brewable foods, drinks, and names and icons of the items they name; the state refers to them by id only.</summary>
     public bool Catalog(string catalogJson) => _page.Call($"catalog({catalogJson})");
 
-    /// <summary>The open barrel's state drawn on the game's own brewing screen, or a view with show false to clear it.</summary>
+    /// <summary>The open barrel's state drawn on the game's brewing screen, or a view with show false to clear it.</summary>
     public bool Brew(string stateJson) => _page.Call($"brew({stateJson})");
 }

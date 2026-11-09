@@ -14,7 +14,7 @@ public sealed record BrewExtras(IReadOnlySet<long> Again, bool IsSpoilingFirst)
 }
 
 /// <summary>
-/// The JSON page.js draws on the game's own brewing screen. Names and icons live in the catalog, sent once per game
+/// The JSON page.js draws on the game's brewing screen. Names and icons live in the catalog, sent once per game
 /// and language; the state names everything by id.
 /// </summary>
 public static class BrewView

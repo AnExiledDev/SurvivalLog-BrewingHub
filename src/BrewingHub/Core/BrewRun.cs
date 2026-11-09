@@ -109,7 +109,7 @@ public static class BrewRun
         return isEmptied ? new Pressed(true, Texts.Emptied.Pick(isChinese)) : new Pressed(false, Texts.EmptyRefused.Pick(isChinese));
     }
 
-    /// <summary>Takes a finished barrel's bottles to the bag, by the game's own harvest.</summary>
+    /// <summary>Takes a finished barrel's bottles to the bag, by the game's harvest.</summary>
     public static Pressed Collect(IBrewGame game, long furnitureId, bool isChinese)
     {
         if (game.Read() is not BrewRead.Ready { Cellar: var cellar }) return new Pressed(false, Texts.NoGame.Pick(isChinese));

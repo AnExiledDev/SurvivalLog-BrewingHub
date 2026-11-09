@@ -1,5 +1,5 @@
 // Brewing Hub's web half. Runs in Root.html, the document every game page iframe sits in. Adds a fourth column, a
-// quality line, nudges and buttons to the game's own brewing barrel screen. Talks to the plugin through Exiled's
+// quality line, nudges and buttons to the game's brewing barrel screen. Talks to the plugin through Exiled's
 // Toolkit's page API (etk.send("slmod|brewinghub|", "<verb>")) and is driven by window.__slbrewinghub.
 (function () {
   if (window.__slbrewinghub) return;
@@ -211,7 +211,7 @@
     if (brewWatch) brewWatch.refresh();
   }
 
-  // Classes the game's own stylesheet already gives this page (BrewPanel.html): its colours, its columns.
+  // Classes the game's stylesheet already gives this page (BrewPanel.html): its colours, its columns.
   var PAGE_CSS = [
     '.bh-ours .poor,.bh-ours.poor{color:#c98a6a}.bh-ours .avg{color:var(--warm-gold)}.bh-ours .strong{color:#e07a8e}',
     '.bh-ours .dim{color:var(--text-dark);opacity:.8}.bh-ours .neg{color:#e08a8a}.bh-ours .have{color:#9fc88a}',
@@ -395,7 +395,7 @@
     col.addEventListener('click', onClick);
     system.appendChild(col);
     // Drawn at the player's UI size (Exiled's Toolkit), as big as the whole brewing screen still fits. The boxes added
-    // inside the game's own columns keep the game's size, like the text around them. A zoom moves the game's buttons.
+    // inside the game's columns keep the game's size, like the text around them. A zoom moves the game's buttons.
     etk.size(col, {
       mod: UI_SIZE_NAME,
       fit: system,
@@ -513,7 +513,7 @@
     refreshPages();
   }
 
-  // ---------- additions to the game's own columns ----------
+  // ---------- additions to the game's columns ----------
 
   function barrel() { return st.barrel || { id: '0', state: IDLE, locked: false, again: false }; }
 
@@ -550,7 +550,7 @@
     return html;
   }
 
-  // The quality line each drink starts at, under the game's own three drink names; put back when the game redraws them.
+  // The quality line each drink starts at, under the game's three drink names; put back when the game redraws them.
   // A check only looks that the three lines are still on the page; the game rewriting a label drops its line.
   function drawBands(p) {
     var bands = p.bands;

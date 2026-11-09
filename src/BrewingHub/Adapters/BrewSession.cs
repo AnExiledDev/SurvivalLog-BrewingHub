@@ -8,7 +8,7 @@ using ExiledToolkit.Web;
 namespace BrewingHub.Adapters;
 
 /// <summary>
-/// Brewing Hub's game side, run once a frame: the catalog and state page.js draws on the game's own brewing screen, the
+/// Brewing Hub's game side, run once a frame: the catalog and state page.js draws on the game's brewing screen, the
 /// presses the page asks for, and what happens when a barrel finishes or is collected. Page messages arrive on the web
 /// view's thread, so they are queued and handled here, in this frame.
 /// </summary>

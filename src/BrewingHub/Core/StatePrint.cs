@@ -55,7 +55,7 @@ public static class StatePrint
     }
 
     /// <summary>
-    /// What the bag and the open barrel hold: the food in reach of the game's own brewing screen. When it changes
+    /// What the bag and the open barrel hold: the food in reach of the game's brewing screen. When it changes
     /// without a press here, food was moved by hand, so the storages may have changed too.
     /// </summary>
     public static ulong OfHeld(IReadOnlyList<Stack> stock, long roleId, Barrel? open)

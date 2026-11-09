@@ -15,7 +15,7 @@ namespace BrewingHub.Adapters;
 /// <summary>
 /// The game's side of every read and press. Food is read the way the building menu counts materials (the player's bag
 /// and every home storage in the cost pool); barrels are every brewing furniture in the base, read through their brew
-/// component and the game's own preview; food moves by the quick move the brewing screen's shift-click ends in. Each
+/// component and the game's preview; food moves by the quick move the brewing screen's shift-click ends in. Each
 /// call fails soft: an exception is logged once per kind of call and answered as a refusal.
 /// </summary>
 internal sealed class GameBrewing : IBrewGame
@@ -201,7 +201,7 @@ internal sealed class GameBrewing : IBrewGame
     });
 
     /// <summary>
-    /// The screen's harvest: the game's own check first (a full bag, say), whose reason is shown as the game words it,
+    /// The screen's harvest: the game's check first (a full bag, say), whose reason is shown as the game words it,
     /// then the harvest into the player's bag.
     /// </summary>
     public Collected Collect(long furnitureId)
@@ -386,7 +386,7 @@ internal sealed class GameBrewing : IBrewGame
     /// <summary>
     /// The food the player can reach. A full read walks every storage. The open screen reads the bag each time and keeps
     /// the storages as last walked; it walks them again every few seconds, when the hour turns, after a press, and when
-    /// the bag or the open barrel changed, since food moved by hand on the game's own screen may have left a storage.
+    /// the bag or the open barrel changed, since food moved by hand on the game's screen may have left a storage.
     /// </summary>
     private List<Core.Stack> ReadFood(ItemManager items, ConfigManager config, long roleId, int hour, float now, Places places, Barrel? open, bool isFull, out bool isEverything)
     {
@@ -635,7 +635,7 @@ internal sealed class GameBrewing : IBrewGame
         return _rows[id] = item == null ? default : new Row(item, item.CanBrew, item.Life > 0);
     }
 
-    /// <summary>The settings and talents CalcBrewPreview reads, through the game's own getters.</summary>
+    /// <summary>The settings and talents CalcBrewPreview reads, through the game's getters.</summary>
     private static Rules ReadRules(ConfigManager config)
     {
         var shipped = Rules.Shipped;
