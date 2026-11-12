@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0
+
+- Brew now suggests much shorter lists. Each barrel makes the most bottles it can from as few foods as possible, so a few Watermelons are enough when you have them, instead of a long mix of everything.
+- Brew now wastes less food. It no longer adds food that makes no extra bottle.
+- The same food in one storage now shows as one line on Brew now, however many stacks it is in.
+- On Brew now and Load, the `FillSpoilingFirst` setting now only matters when two choices are just as good. It then picks the food closest to spoiling, or the freshest.
+- Made for Survival Log 1.1.20719.
+
 ## 0.2.3
 
 - **Warning:** now uses Exiled's Toolkit for its shared parts, so it needs Exiled's Toolkit 0.19.0 or newer. Update the Toolkit first.

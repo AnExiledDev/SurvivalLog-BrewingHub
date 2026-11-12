@@ -8,7 +8,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a column to t
 
 [size=5]Main features[/size]
 [list]
-[*][b]Brew now[/b]: the best barrel of Strong, Average and Poor drink your food can make, with the bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Load puts what is in the barrel back in your bag, then fills it from your bag and storages. Load uses the food closest to spoiling first, or the freshest first if you prefer (setting [font=Courier New]FillSpoilingFirst[/font]). Spoiled food is never used.[/*]
+[*][b]Brew now[/b]: the best barrel of Strong, Average and Poor drink your food can make, with the bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Each barrel makes the most bottles from the fewest foods, with the least satiety left over, so a few Watermelons are enough when you have them. The same food in one storage shows as one line. Load puts what is in the barrel back in your bag, then fills it from your bag and storages. When two choices are just as good, the food closest to spoiling goes in first, or the freshest if you prefer (setting [font=Courier New]FillSpoilingFirst[/font]). Spoiled food is never used.[/*]
 [*][b]Quality as you fill[/b]: under the barrel you see the mix's quality (total morale divided by total satiety), how far it is from the next drink up, and how much more satiety fills one more bottle.[/*]
 [*][b]One-click changes[/b]: above the start button, buttons to add a food from your bag or storage, or take one out, when that makes a better drink or one more bottle, with what the barrel would make after.[/*]
 [*][b]Recipes[/b]: each drink with its quality range, its description, the foods best for it, what it is used in and how many relief requests ask for it, plus your talents' effect on brewing time and satiety per bottle.[/*]
@@ -64,7 +64,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 
 [size=5]主要功能[/size]
 [list]
-[*][b]现在能酿[/b]：用你的食材能酿出的烈性、普通和劣质酒的最佳一桶，显示瓶数、品质、酿造时间和每种食材的位置（一天内会变质的食材会标出）。「放入」会先把桶里的食材取回背包，再从背包和储物装桶。「放入」默认优先使用快变质的食材，也可改为优先使用最新鲜的（设置 [font=Courier New]FillSpoilingFirst[/font]）。变质的食材不会被使用。[/*]
+[*][b]现在能酿[/b]：用你的食材能酿出的烈性、普通和劣质酒的最佳一桶，显示瓶数、品质、酿造时间和每种食材的位置（一天内会变质的食材会标出）。每一桶都用最少的食材装出最多的瓶数，剩下装不满一瓶的饱腹也最少，所以有几个西瓜时只用西瓜就够了。同一储物里的同一种食材只显示为一行。「放入」会先把桶里的食材取回背包，再从背包和储物装桶。两种选择一样好时，默认优先使用快变质的食材，也可改为优先使用最新鲜的（设置 [font=Courier New]FillSpoilingFirst[/font]）。变质的食材不会被使用。[/*]
 [*][b]装桶时显示品质[/b]：酿酒桶下方显示这桶的品质（总心态除以总饱腹）、离下一种更好的酒还差多少，以及再加多少饱腹能多装一瓶。[/*]
 [*][b]一键改进[/b]：开始按钮上方的按钮可以从背包或储物加入一种食材，或取出一份，只在能让酒更好或多出一瓶时显示，并标出改完后能酿出什么。[/*]
 [*][b]酒谱[/b]：每种酒的品质范围、说明、最适合的食材、可用于什么，以及有多少个救济委托需要它，并列出天赋对酿造时间和每瓶所需饱腹的影响。[/*]

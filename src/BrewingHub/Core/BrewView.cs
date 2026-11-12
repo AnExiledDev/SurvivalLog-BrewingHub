@@ -199,19 +199,41 @@ public static class BrewView
         json.WriteNumber("wasted", Round(plan.Brew.Wasted));
         json.WriteStartArray("takes");
 
-        foreach (var take in plan.Takes)
+        foreach (var line in LinesOf(plan.Takes))
         {
             json.WriteStartObject();
-            json.WriteNumber("id", take.Stack.ItemId);
-            json.WriteNumber("n", take.Units);
-            json.WriteString("where", take.Stack.Place);
-            json.WriteBoolean("urgent", take.Stack.HoursLeft is < UrgentHours);
+            json.WriteNumber("id", line.ItemId);
+            json.WriteNumber("n", line.Units);
+            json.WriteString("where", line.Place);
+            json.WriteBoolean("urgent", line.IsUrgent);
             json.WriteEndObject();
         }
 
         json.WriteEndArray();
         json.WriteEndObject();
     }
+
+    /// <summary>
+    /// A plan's takes as the player reads them: one line per food and storage, however many stacks it holds there,
+    /// marked when any of them spoils within a day. Load still moves stack by stack.
+    /// </summary>
+    private static List<PlanLine> LinesOf(IReadOnlyList<Take> takes)
+    {
+        var lines = new List<PlanLine>();
+
+        foreach (var take in takes)
+        {
+            var isUrgent = take.Stack.HoursLeft is < UrgentHours;
+            var at = lines.FindIndex(line => line.ItemId == take.Stack.ItemId && line.Place == take.Stack.Place);
+
+            if (at < 0) lines.Add(new PlanLine(take.Stack.ItemId, take.Stack.Place, take.Units, isUrgent));
+            else lines[at] = lines[at] with { Units = lines[at].Units + take.Units, IsUrgent = lines[at].IsUrgent || isUrgent };
+        }
+
+        return lines;
+    }
+
+    private sealed record PlanLine(int ItemId, string Place, int Units, bool IsUrgent);
 
     private static void WriteNudge(Utf8JsonWriter json, Nudge nudge)
     {

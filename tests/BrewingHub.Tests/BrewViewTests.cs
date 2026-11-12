@@ -50,6 +50,21 @@ public class BrewViewTests
     }
 
     [Fact]
+    public void The_same_food_in_one_storage_shows_as_one_line_however_many_stacks_it_is_in()
+    {
+        var game = new FakeGame { Stock = { S(1, Berry, 10, owner: Chest, hours: 10), S(2, Berry, 10, owner: Chest, hours: 50), S(3, Berry, 5, owner: Chest, hours: 60) } };
+        var takes = State(game).GetProperty("plans")[2].GetProperty("takes");
+
+        Assert.Equal(1, takes.GetArrayLength());
+        Assert.Equal(Berry, takes[0].GetProperty("id").GetInt32());
+        Assert.Equal(23, takes[0].GetProperty("n").GetInt32());
+        Assert.Equal("Chest", takes[0].GetProperty("where").GetString());
+
+        // One of the three stacks spoils within a day, so the line is marked.
+        Assert.True(takes[0].GetProperty("urgent").GetBoolean());
+    }
+
+    [Fact]
     public void A_brewing_barrel_gets_no_nudges()
     {
         var game = new FakeGame { Stock = { S(1, Stew, 1) } };

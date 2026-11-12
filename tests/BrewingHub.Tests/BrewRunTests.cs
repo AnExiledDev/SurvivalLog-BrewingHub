@@ -66,7 +66,9 @@ public class BrewRunTests
         game.A.Contents.Add(S(7, Berry, 2, owner: BarrelA));
 
         Assert.True(BrewRun.Load(game, BarrelA, 2, true, false).IsDone);
-        Assert.Equal(4, InBarrel(game, Berry));
+
+        // Only 2 are in the bag, so 3 means the barrel's own 2 counted. The fourth would add no bottle, so it stays out.
+        Assert.Equal(3, InBarrel(game, Berry));
     }
 
     [Fact]

@@ -4,7 +4,7 @@ Know what a barrel will brew before you start it. Brewing Hub adds a fourth colu
 
 ## Features
 
-- **Brew now**: the best barrel of Strong, Average and Poor drink your food can make, with how many bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Load puts what is in the barrel back in your bag, then fills it from your bag and storages. Load uses the food closest to spoiling first, or the freshest first if you prefer (setting `FillSpoilingFirst`). Spoiled food is never used.
+- **Brew now**: the best barrel of Strong, Average and Poor drink your food can make, with how many bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Each barrel makes the most bottles from the fewest foods, with the least satiety left over, so a few Watermelons are enough when you have them. The same food in one storage shows as one line. Load puts what is in the barrel back in your bag, then fills it from your bag and storages. When two choices are just as good, the food closest to spoiling goes in first, or the freshest if you prefer (setting `FillSpoilingFirst`). Spoiled food is never used.
 - **Quality as you fill**: under the barrel, the mix's quality (total morale over total satiety), the line for the next drink up, the satiety that fills no bottle and how much more fills the next one. The game's three drink names show the quality each one starts at.
 - **One-click changes**: above the start button, buttons to add a food from your bag or storage, or take one out, when that makes a better drink or one more bottle, with what the barrel would make after.
 - **Recipes**: each drink with its quality range, its description, the foods best for it, what it is used in and how many relief requests ask for it. Your talents' effect on brewing time and satiety per bottle is listed too.
@@ -45,7 +45,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.2.3 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.3.0 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 

@@ -12,7 +12,7 @@ namespace BrewingHub;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.2.3";
+    private const string Version = "0.3.0";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and UI size all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
@@ -29,8 +29,8 @@ public sealed class Plugin : BasePlugin
         ModUiSize.Bind(Config, UiSizeName);
 
         var isSpoilingFirst = Config.Bind("General", "FillSpoilingFirst", true,
-            "When true, Load and the one-click adds fill the barrel with the food closest to spoiling first. When false, they use the freshest food first.\n" +
-            "设为 true 时，「放入」和一键加入会优先使用快变质的食材。设为 false 时，优先使用最新鲜的食材。");
+            "When true, the food closest to spoiling goes in first: Load picks it over another food that makes just as good a barrel, and the one-click adds take from it. When false, the freshest food goes in first. Either way, Load always picks the barrel with the most bottles from the fewest foods and the least waste.\n" +
+            "设为 true 时，优先使用快变质的食材：两种食材能酿出一样好的一桶时，「放入」选快变质的那种，一键加入也从它取。设为 false 时，优先使用最新鲜的食材。无论哪种设置，「放入」都会选瓶数最多、所用食材最少、浪费最少的一桶。");
         var isPuttingAway = Config.Bind("General", "PutBottlesAway", false,
             "When true, collecting a barrel moves every bottle of that drink in your bag to a home storage that already holds it. With no such storage, they stay in your bag.\n" +
             "设为 true 时，取出一桶酒时会把背包里所有这种酒移到已经放有这种酒的家中储物里。没有这样的储物时，酒留在背包里。");

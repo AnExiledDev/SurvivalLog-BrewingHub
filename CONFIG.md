@@ -6,7 +6,7 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| `FillSpoilingFirst` | `true` | Load and the one-click adds fill the barrel with the food closest to spoiling first. When `false`, they use the freshest food first. |
+| `FillSpoilingFirst` | `true` | The food closest to spoiling goes in first: Load picks it over another food that makes just as good a barrel, and the one-click adds take from it. When `false`, the freshest food goes in first. Either way, Load always picks the barrel with the most bottles from the fewest foods and the least waste. |
 | `PutBottlesAway` | `false` | When you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it. With no such storage, they stay in your bag. |
 
 ## Interface
