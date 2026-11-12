@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+- The search box on the Ingredients tab no longer hides every food when a space is typed before or after the name.
+- Made for Survival Log 1.1.20719.
+
 ## 0.3.1
 
 - Clearer wording in the settings and on screen.

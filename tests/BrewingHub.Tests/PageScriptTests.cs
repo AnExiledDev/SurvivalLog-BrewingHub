@@ -206,6 +206,22 @@ public class PageScriptTests
     }
 
     [Fact]
+    public void Spaces_around_the_search_do_not_hide_the_food()
+    {
+        var page = Opened(Stocked());
+
+        page.Click("act('tab', 'ings')");
+        page.Run("type(brewPage().getElementById('bhSearch'), ' berr ')");
+
+        Assert.Equal(1, page.Count("brewPage().querySelectorAll('#bhView .bh-trow[data-act]')"));
+        Assert.True(page.Is("act('add', 101)"));
+
+        page.Run("type(brewPage().getElementById('bhSearch'), ' ')");
+
+        Assert.Equal(3, page.Count("brewPage().querySelectorAll('#bhView .bh-trow[data-act]')"));
+    }
+
+    [Fact]
     public void Cooked_dishes_show_only_with_the_raw_food_filter_off()
     {
         var page = Opened(Stocked());

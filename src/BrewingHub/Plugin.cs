@@ -12,7 +12,7 @@ namespace BrewingHub;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.3.1";
+    private const string Version = "0.3.2";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and UI size all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";

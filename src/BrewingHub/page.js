@@ -834,7 +834,7 @@
 
   // Every brewable food: its numbers, how many are in reach, and how many lift the barrel to the next drink.
   function viewIngredients() {
-    var words = ui.search.toLowerCase();
+    var words = ui.search.trim().toLowerCase();
     var all = cat.ingList.filter(function (i) { return i.sat > 0; });
     var foods = all.filter(function (i) {
       return (!ui.rawOnly || !i.dish) && (!ui.haveOnly || have(i.id) > 0) && (!words || String(i.name).toLowerCase().indexOf(words) >= 0);
