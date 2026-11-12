@@ -758,7 +758,7 @@
         return;
       }
 
-      var line = esc(say('bottles', p.bottles)) + ' &middot; ' + esc(say('band', fmt(p.q))) + ' &middot; ' + esc(hoursText(p.hours));
+      var line = esc(p.bottles === 1 ? say('bottle', p.bottles) : say('bottles', p.bottles)) + ' &middot; ' + esc(say('band', fmt(p.q))) + ' &middot; ' + esc(hoursText(p.hours));
       var load = '<button' + act('load', tier, 'bh-load') + (canLoad ? '' : ' disabled') + '>' + esc(say('load')) + '</button>';
 
       rows.push('<div class="bh-card">' + head(drink, tier, line, load)
@@ -787,7 +787,7 @@
     [2, 1, 0].forEach(function (tier) {
       var drink = drinkOf(tier);
       var p = plans[tier];
-      var can = '<span class="bh-can' + (p ? ' ok' : '') + '">' + esc(p ? say('canMake', p.bottles) : say('noneNow')) + '</span>';
+      var can = '<span class="bh-can' + (p ? ' ok' : '') + '">' + esc(!p ? say('noneNow') : p.bottles === 1 ? say('canMakeOne', p.bottles) : say('canMake', p.bottles)) + '</span>';
       var best = topFor(tier);
       var used = drink.used || [];
       var html = '<div class="bh-card">' + head(drink, tier, esc(tierName(tier) + ' \u00b7 ' + say('band', bandText(tier))), can)
@@ -806,7 +806,7 @@
 
             return '<span>' + img(make.icon) + esc(make.name) + (others ? ' <i>+ ' + esc(others) + '</i>' : '') + '</span>';
           }).join('')
-          + (drink.asks ? '<span class="ask">' + esc(say('asks', drink.asks)) + '</span>' : '') + '</div>';
+          + (drink.asks ? '<span class="ask">' + esc(drink.asks === 1 ? say('asksOne', drink.asks) : say('asks', drink.asks)) + '</span>' : '') + '</div>';
       }
 
       rows.push(html + '</div>');

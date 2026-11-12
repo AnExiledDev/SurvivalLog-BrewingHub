@@ -1,21 +1,27 @@
 # Changelog
 
+## 0.3.1
+
+- Clearer wording in the settings and on screen.
+- A barrel that makes one bottle now says "1 bottle", not "1 bottles".
+- Made for Survival Log 1.1.20719.
+
 ## 0.3.0
 
-- Brew now suggests much shorter lists. Each barrel makes the most bottles it can from as few foods as possible, so a few Watermelons are enough when you have them, instead of a long mix of everything.
-- Brew now wastes less food. It no longer adds food that makes no extra bottle.
+- Brew now suggests barrels with far fewer foods in them. Each barrel makes the most bottles it can from as few foods as possible, so when you have Watermelons, a few of them can be the whole barrel instead of a long mix of everything.
+- Brew now wastes less food. It no longer adds food that doesn't make another bottle.
 - The same food in one storage now shows as one line on Brew now, however many stacks it is in.
-- On Brew now and Load, the `FillSpoilingFirst` setting now only matters when two choices are just as good. It then picks the food closest to spoiling, or the freshest.
+- The `FillSpoilingFirst` setting now only matters when two foods make an equally good barrel. Then Brew now and Load pick the food closest to spoiling, or the freshest.
 - Made for Survival Log 1.1.20719.
 
 ## 0.2.3
 
-- **Warning:** now uses Exiled's Toolkit for its shared parts, so it needs Exiled's Toolkit 0.19.0 or newer. Update the Toolkit first.
+- **Warning:** Brewing Hub now needs Exiled's Toolkit 0.19.0 or newer. Update the Toolkit first.
 - Made for Survival Log 1.1.20719.
 
 ## 0.2.2
 
-- Fixed for the 1.1.20719 game update: a barrel now starts once it holds one bottle's worth of satiety, the same as the game. With a bottle yield talent that is less than before, and Brewing Hub no longer holds back a brew the game would start.
+- Fixed for the 1.1.20719 game update: a barrel can now start as soon as it holds enough satiety for one bottle, which is when the game lets you start it. With a bottle yield talent, that is less satiety than before. Brewing Hub also no longer blocks a brew the game would start.
 - Made for Survival Log 1.1.20719.
 
 ## 0.2.1
@@ -26,7 +32,7 @@
 
 ## 0.2.0
 
-- New: `UiScale` under Interface sets the size of Brewing Hub's own windows on their own, from 75% to 200%, whatever Exiled's Toolkit's UI size is. At 0, the default, they follow the Toolkit's. Needs Exiled's Toolkit 0.11.0 or newer.
+- New: `UiScale` under Interface lets you set a size for Brewing Hub's windows alone, from 75% to 200%, whatever the UI size in Exiled's Toolkit is. At 0, the default, they follow the Toolkit's. Needs Exiled's Toolkit 0.11.0 or newer.
 - Made for Survival Log 1.1.19611.
 
 ## 0.1.8

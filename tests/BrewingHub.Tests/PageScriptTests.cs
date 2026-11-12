@@ -1,3 +1,4 @@
+using System.Text.Json.Nodes;
 using BrewingHub.Core;
 using Xunit;
 using static BrewingHub.Tests.FakeGame;
@@ -230,6 +231,33 @@ public class PageScriptTests
         Assert.Contains("Asked for in 2 relief requests", text);
     }
 
+    /// <summary>A plan that makes one bottle says "1 bottle", on both tabs that show it.</summary>
+    [Fact]
+    public void A_one_bottle_plan_says_bottle_not_bottles()
+    {
+        var state = JsonNode.Parse(StateOf(Stocked()))!;
+
+        state["plans"]![2]!["bottles"] = 1;
+
+        var page = new PageScript();
+
+        page.OpenBrewing();
+        page.Catalog(BrewView.Catalog(Book));
+        page.Brew(state.ToJsonString());
+        page.Poll();
+
+        var now = page.Text("shown('#bhView')");
+
+        Assert.Matches(@"(?<!\d)1 bottle(?!s)", now);
+        Assert.DoesNotMatch(@"(?<!\d)1 bottles", now);
+
+        page.Click("act('tab', 'recipes')");
+
+        var recipes = page.Text("shown('#bhView')");
+
+        Assert.Matches(@"can make 1 bottle(?!s)", recipes);
+    }
+
     [Fact]
     public void Items_take_the_colour_of_the_drink_they_make_alone()
     {
@@ -253,7 +281,7 @@ public class PageScriptTests
         var tip = page.Text("shown('#itemTooltip')");
 
         Assert.Contains("Morale 6, quality 0.60", tip);
-        Assert.Contains("Alone: Wine, 3 per bottle", tip);
+        Assert.Contains("On its own: Wine, 3 per bottle", tip);
     }
 
     [Fact]

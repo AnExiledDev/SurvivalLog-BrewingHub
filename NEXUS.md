@@ -1,23 +1,23 @@
 Name: Brewing Hub
-Summary: A better brewing barrel screen: the best barrel of each drink from your food, the quality and bottles as you fill, one-click changes for a better drink or one more bottle, and Load from your storages. Also lists every drink and what it is for, each food's numbers and every barrel in your base, with Collect and brew again. English and Chinese.
+Summary: A better brewing barrel screen. See the best barrel of each drink you can make from your food, the quality and bottles as you fill, and one-click changes for a better drink or one more bottle. Load fills the barrel from your bag and storages. It also lists what each drink is for, each food's numbers and every barrel in your base. English and Chinese.
 
 Description (BBCode):
 [center][img]https://sldb.core-directive.com/media/save/1-save-safe.png[/img][/center]
 
-Know what a barrel will brew before you start it. Brewing Hub adds a column to the game's brewing barrel screen with the best barrel of each drink you can make from your bag and home storages, the drinks and what they are for, every brewable food's numbers, and every barrel in your base. As you fill a barrel it shows the quality, the drink, the bottles and the brewing time, with one-click changes that make a better drink or one more bottle.
+Know what a barrel will brew before you start it. Brewing Hub adds a column to the brewing barrel screen. It shows the best barrel of each drink you can make from your bag and home storages, what each drink is for, the numbers for every food you can brew with, and every barrel in your base. As you fill a barrel, it shows the quality, the drink, the bottles and the brewing time, with one-click changes that make a better drink or one more bottle.
 
 [size=5]Main features[/size]
 [list]
-[*][b]Brew now[/b]: the best barrel of Strong, Average and Poor drink your food can make, with the bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Each barrel makes the most bottles from the fewest foods, with the least satiety left over, so a few Watermelons are enough when you have them. The same food in one storage shows as one line. Load puts what is in the barrel back in your bag, then fills it from your bag and storages. When two choices are just as good, the food closest to spoiling goes in first, or the freshest if you prefer (setting [font=Courier New]FillSpoilingFirst[/font]). Spoiled food is never used.[/*]
-[*][b]Quality as you fill[/b]: under the barrel you see the mix's quality (total morale divided by total satiety), how far it is from the next drink up, and how much more satiety fills one more bottle.[/*]
-[*][b]One-click changes[/b]: above the start button, buttons to add a food from your bag or storage, or take one out, when that makes a better drink or one more bottle, with what the barrel would make after.[/*]
-[*][b]Recipes[/b]: each drink with its quality range, its description, the foods best for it, what it is used in and how many relief requests ask for it, plus your talents' effect on brewing time and satiety per bottle.[/*]
-[*][b]Ingredients[/b]: every brewable food with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more lift the barrel to the next drink. Search, filter and sort. Click a row to put one in the barrel.[/*]
+[*][b]Brew now[/b]: the best barrel of Strong, Average and Poor drink you can make, with the bottles, the quality, the brewing time and where each food comes from. Food that spoils within a day is marked. Each barrel makes the most bottles from the fewest foods, with as little satiety left over as possible, so when you have Watermelons, a few of them can be the whole barrel. The same food in one storage shows as one line. Load moves what's in the barrel back to your bag, then fills it from your bag and storages. If two foods make an equally good barrel, the one closest to spoiling goes in, or the freshest if you prefer (setting [font=Courier New]FillSpoilingFirst[/font]). Spoiled food is never used.[/*]
+[*][b]Quality as you fill[/b]: under the barrel you see its quality (total morale divided by total satiety), the quality the next drink up starts at, how much satiety is left over and how much more fills the next bottle.[/*]
+[*][b]One-click changes[/b]: when adding or taking out a food would make a better drink or one more bottle, a button for it shows above the start button, with what the barrel would make after the change. Added food comes from your bag or storage.[/*]
+[*][b]Recipes[/b]: each drink with its quality range, its description, the best foods for it, what it is used in and how many relief requests ask for it, plus your talents' effect on brewing time and satiety per bottle.[/*]
+[*][b]Ingredients[/b]: every food you can brew with, with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more would take the barrel to the next drink. Search, filter and sort. Click a row to put one in the barrel.[/*]
 [*][b]Barrels[/b]: every brewing barrel in your base, what it is brewing, the time left, and a Collect button on finished ones.[/*]
-[*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
+[*][b]Collect and brew again[/b]: on a finished barrel, one button takes the bottles, fills the barrel again and starts the same drink. A "Brew again when collected" switch does the same thing whenever the barrel's bottles are taken. The switch lasts until you leave the game.[/*]
 [*][b]Put bottles away[/b] (setting [font=Courier New]PutBottlesAway[/font], off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.[/*]
 [/list]
-You get a notice when a barrel finishes or starts brewing again. Exiled's Toolkit's UI size setting (UiScale) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. Brewing Hub's own UiScale setting can set a size for this mod alone.
+You get a message when a barrel finishes or starts brewing again. The UI size setting in Exiled's Toolkit (UiScale) makes the Brewing Hub column bigger or smaller, up to the point where the whole brewing screen still fits. Brewing Hub's own UiScale setting sets a size for this mod alone.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
@@ -48,11 +48,11 @@ Works in English and Chinese.
 Delete [font=Courier New]BrewingHub.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder.
 
 [size=5]Configuration[/size]
-To change which food Load uses first, or whether bottles are put away, edit [font=Courier New]BepInEx\config\com.dev.survivallog.brewinghub.cfg[/font] while the game is closed, or use the Mod Manager's Mods screen (see [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHub/blob/main/CONFIG.md]CONFIG.md[/url] for every setting; the cfg file explains each setting in English and Chinese).
+To change which food Load uses first, or whether bottles are put away, edit [font=Courier New]BepInEx\config\com.dev.survivallog.brewinghub.cfg[/font] while the game is closed, or use the Mod Manager's Mods screen. Every setting is listed in [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHub/blob/main/CONFIG.md]CONFIG.md[/url], and the cfg file explains each one in English and Chinese.
 
 [size=5]Feedback[/size]
 Found a bug or have an idea? Come say hi on the [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url], or post in this page's Posts tab. For bugs, please include [font=Courier New]BepInEx\LogOutput.log[/font] and, if you turned on [font=Courier New]LogToFile[/font], [font=Courier New]BepInEx\brewing-hub.log[/font].
-To reach me directly, message [b]exiled.dev[/b] on Discord; you can find me in the [url=https://discord.gg/MZGg4gQAUe]official Survival Log Discord[/url]. I'm also on X as [url=https://x.com/AnExiledDev]@AnExiledDev[/url].
+To reach me directly, message [b]exiled.dev[/b] on Discord. You can find me in the [url=https://discord.gg/MZGg4gQAUe]official Survival Log Discord[/url]. I'm also on X as [url=https://x.com/AnExiledDev]@AnExiledDev[/url].
 
 [size=5]Source and license[/size]
 Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHub]github.com/AnExiledDev/SurvivalLog-BrewingHub[/url]
@@ -64,16 +64,16 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-BrewingHu
 
 [size=5]主要功能[/size]
 [list]
-[*][b]现在能酿[/b]：用你的食材能酿出的烈性、普通和劣质酒的最佳一桶，显示瓶数、品质、酿造时间和每种食材的位置（一天内会变质的食材会标出）。每一桶都用最少的食材装出最多的瓶数，剩下装不满一瓶的饱腹也最少，所以有几个西瓜时只用西瓜就够了。同一储物里的同一种食材只显示为一行。「放入」会先把桶里的食材取回背包，再从背包和储物装桶。两种选择一样好时，默认优先使用快变质的食材，也可改为优先使用最新鲜的（设置 [font=Courier New]FillSpoilingFirst[/font]）。变质的食材不会被使用。[/*]
-[*][b]装桶时显示品质[/b]：酿酒桶下方显示这桶的品质（总心态除以总饱腹）、离下一种更好的酒还差多少，以及再加多少饱腹能多装一瓶。[/*]
-[*][b]一键改进[/b]：开始按钮上方的按钮可以从背包或储物加入一种食材，或取出一份，只在能让酒更好或多出一瓶时显示，并标出改完后能酿出什么。[/*]
+[*][b]现在能酿[/b]：用你的食材能酿出的烈性、普通和劣质酒的最佳一桶，显示瓶数、品质、酿造时间和每种食材的位置。一天内会变质的食材会标出。每一桶都用最少的食材装出最多的瓶数，剩下装不满一瓶的饱腹也最少，所以有西瓜时，一桶只放几个西瓜就够了。同一储物里的同一种食材只显示为一行。「放入」会先把桶里的食材取回背包，再从背包和储物装桶。两种食材能酿出一样好的一桶时，默认优先放入快变质的那种，也可改为优先放入最新鲜的（设置 [font=Courier New]FillSpoilingFirst[/font]）。变质的食材不会被使用。[/*]
+[*][b]装桶时显示品质[/b]：酿酒桶下方显示这桶的品质（总心态除以总饱腹）、下一种更好的酒从多少品质开始、多出多少饱腹，以及再加多少饱腹能多装一瓶。[/*]
+[*][b]一键改进[/b]：加入或取出一种食材能让酒更好或多出一瓶时，开始按钮上方会出现对应的按钮，并标出改完后能酿出什么。加入的食材来自背包或储物。[/*]
 [*][b]酒谱[/b]：每种酒的品质范围、说明、最适合的食材、可用于什么，以及有多少个救济委托需要它，并列出天赋对酿造时间和每瓶所需饱腹的影响。[/*]
 [*][b]食材[/b]：每种可酿食材的饱腹、心态、品质、一瓶需要几份、你有多少，以及再加几份能让这桶升到下一种酒。可搜索、筛选和排序。点击一行可放一份进桶。[/*]
 [*][b]酿酒桶[/b]：基地里的所有酿酒桶、正在酿什么、还剩多久，酿好的桶有「取出」按钮。[/*]
-[*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶，并为同一种酒重新装桶、开始酿造。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
+[*][b]取出并再酿一桶[/b]：酿好的桶上，一个按钮就能取出酒瓶、重新装桶，并开始酿同一种酒。打开「取出后再酿一桶」开关后，无论怎样取出这个桶的酒瓶，都会自动这样做。离开游戏后开关关闭。[/*]
 [*][b]自动收酒[/b]（设置 [font=Courier New]PutBottlesAway[/font]，默认关闭）：取出一桶酒时，背包里所有这种酒都会移到已经放有这种酒的家中储物里。[/*]
 [/list]
-酒桶酿好或重新开始酿造时会弹出提示。可以用 Exiled's Toolkit 的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。还可以用 Brewing Hub 自己的 UiScale 设置单独调整本模组的大小。
+酿酒桶酿好或重新开始酿造时会弹出提示。可以用 Exiled's Toolkit 的界面大小设置（UiScale）放大或缩小 Brewing Hub 这一栏，最大放到整个酿酒界面仍能完整显示为止。还可以用 Brewing Hub 自己的 UiScale 设置单独调整本模组的大小。
 
 Brewing Hub 不会向存档添加任何内容，也不会修改游戏文件，可以随时移除。
 

@@ -37,7 +37,7 @@ public class BrewRunTests
         var pressed = BrewRun.Load(game, BarrelA, 2, true, false);
 
         Assert.False(pressed.IsDone);
-        Assert.Equal("Moved 30 where 23 was planned; check the barrel before brewing.", pressed.Message);
+        Assert.Equal("Moved 30 instead of the planned 23. Check the barrel before you start it.", pressed.Message);
 
         var again = Stocked();
 
@@ -104,7 +104,7 @@ public class BrewRunTests
 
         game.RefusesMoves = true;
 
-        Assert.Equal(new Pressed(false, "Moved 0 of 23; the game refused the rest."), BrewRun.Load(game, BarrelA, 2, true, false));
+        Assert.Equal(new Pressed(false, "Moved 0 of 23. The game would not take the rest."), BrewRun.Load(game, BarrelA, 2, true, false));
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class BrewRunTests
 
         game.A.Contents.Add(S(7, Potato, 3, owner: BarrelA));
 
-        Assert.Equal(new Pressed(true, "Took Potato out to your bag."), BrewRun.Remove(game, Potato, false));
+        Assert.Equal(new Pressed(true, "Put Potato back in your bag."), BrewRun.Remove(game, Potato, false));
         Assert.Equal(2, InBarrel(game, Potato));
         Assert.Equal(new Pressed(false, "No Berry in the barrel."), BrewRun.Remove(game, Berry, false));
     }

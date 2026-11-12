@@ -1,27 +1,27 @@
 # Brewing Hub
 
-Know what a barrel will brew before you start it. Brewing Hub adds a fourth column to the game's brewing barrel screen with the best barrel of each drink you can make from your bag and home storage, the drinks and what they are for, every brewable food's numbers, and every barrel in your base. As you fill a barrel it shows the quality, the drink, the bottles and the brewing time, with one-click changes that make a better drink or one more bottle.
+Know what a barrel will brew before you start it. Brewing Hub adds a fourth column to the brewing barrel screen. It shows the best barrel of each drink you can make from your bag and home storage, what each drink is for, the numbers for every food you can brew with, and every barrel in your base. As you fill a barrel, it shows the quality, the drink, the bottles and the brewing time, with one-click changes that make a better drink or one more bottle.
 
 ## Features
 
-- **Brew now**: the best barrel of Strong, Average and Poor drink your food can make, with how many bottles, the quality, the brewing time and where each food comes from (food that spoils within a day is marked). Each barrel makes the most bottles from the fewest foods, with the least satiety left over, so a few Watermelons are enough when you have them. The same food in one storage shows as one line. Load puts what is in the barrel back in your bag, then fills it from your bag and storages. When two choices are just as good, the food closest to spoiling goes in first, or the freshest if you prefer (setting `FillSpoilingFirst`). Spoiled food is never used.
-- **Quality as you fill**: under the barrel, the mix's quality (total morale over total satiety), the line for the next drink up, the satiety that fills no bottle and how much more fills the next one. The game's three drink names show the quality each one starts at.
-- **One-click changes**: above the start button, buttons to add a food from your bag or storage, or take one out, when that makes a better drink or one more bottle, with what the barrel would make after.
-- **Recipes**: each drink with its quality range, its description, the foods best for it, what it is used in and how many relief requests ask for it. Your talents' effect on brewing time and satiety per bottle is listed too.
-- **Ingredients**: every brewable food with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more lift the barrel to the next drink. Search, filter by raw food or food you have, and sort by satiety, quality or how many you have. Click a row to put one in the barrel.
+- **Brew now**: the best barrel of Strong, Average and Poor drink you can make, with the bottles, the quality, the brewing time and where each food comes from. Food that spoils within a day is marked. Each barrel makes the most bottles from the fewest foods, with as little satiety left over as possible, so when you have Watermelons, a few of them can be the whole barrel. The same food in one storage shows as one line. Load moves what's in the barrel back to your bag, then fills it from your bag and storages. If two foods make an equally good barrel, the one closest to spoiling goes in, or the freshest if you prefer (setting `FillSpoilingFirst`). Spoiled food is never used.
+- **Quality as you fill**: under the barrel you see its quality (total morale divided by total satiety), the quality the next drink up starts at, how much satiety is left over and how much more fills the next bottle. The three drink names on the brewing screen also show the quality range for each drink.
+- **One-click changes**: when adding or taking out a food would make a better drink or one more bottle, a button for it shows above the start button, with what the barrel would make after the change. Added food comes from your bag or storage.
+- **Recipes**: each drink with its quality range, its description, the best foods for it, what it is used in and how many relief requests ask for it. Your talents' effect on brewing time and satiety per bottle is listed too.
+- **Ingredients**: every food you can brew with, with its satiety, morale, quality, how many it takes for one bottle, how many you have, and how many more would take the barrel to the next drink. Search, filter by raw food or food you have, and sort by satiety, quality or how many you have. Click a row to put one in the barrel.
 - **Barrels**: every brewing barrel in your base, what it is brewing, the time left, and a Collect button on finished ones.
-- **Collect and brew again**: on a finished barrel, one button takes the bottles and fills and starts it again for the same drink. A "Brew again when collected" switch does that on its own whenever the barrel's bottles are taken, by any means. The switch lasts until you leave the game.
+- **Collect and brew again**: on a finished barrel, one button takes the bottles, fills the barrel again and starts the same drink. A "Brew again when collected" switch does the same thing whenever the barrel's bottles are taken, however you take them. The switch lasts until you leave the game.
 - **Put bottles away** (setting `PutBottlesAway`, off by default): when you collect a barrel, every bottle of that drink in your bag moves to a home storage that already holds it.
-- A barrel finishing and a barrel brewing again show as toasts.
-- Exiled's Toolkit's UI size setting (`UiScale`) draws the Brewing Hub column bigger or smaller, as far as the whole brewing screen still fits. The quality line, nudges and buttons inside the game's columns keep the game's size. Brewing Hub's own `UiScale` under Interface sets a size for this mod alone; at 0, the default, it follows the Toolkit's.
+- You get a toast when a barrel finishes or starts brewing again.
+- The UI size setting in Exiled's Toolkit (`UiScale`) makes the Brewing Hub column bigger or smaller, up to the point where the whole brewing screen still fits. The quality line, the one-click changes and the buttons under the barrel stay at the game's size. Brewing Hub's `UiScale` setting under Interface sets a size for this mod alone. At 0, the default, it follows the Toolkit's size.
 
 Brewing Hub adds nothing to your save and does not edit game files. You can remove it at any time.
 
 ## Requirements
 
-- Survival Log 1.1.20719. Built for this version; a game update can break it until the mod is updated.
+- Survival Log 1.1.20719. Built for this version. A game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
-- Optional: [Stacking](https://www.nexusmods.com/survivallog/mods/74). Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking wants it. Without Stacking, nothing changes.
+- Optional: [Stacking](https://www.nexusmods.com/survivallog/mods/74). Brewing Hub moves food Stacking made stackable one unit at a time, the way Stacking expects. Without Stacking, nothing changes.
 - [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.19.0 or newer. Brewing Hub does not load without it. It shows Brewing Hub's messages as toasts, applies settings changed on the Mod Manager's Mods screen without a restart, and its UI size setting sizes the Brewing Hub column.
 - Optional: [Mod Manager](https://www.nexusmods.com/survivallog/mods/73). With it, you can change every setting in game on its Mods screen and see what each one does, without opening the config file.
 
@@ -45,18 +45,18 @@ Settings live in `BepInEx\config\com.dev.survivallog.brewinghub.cfg`, created th
 
 Built against BepInEx `6.0.0-be.788`.
 
-Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.3.0 started`. A line starting with `could not` means part of the mod does not work on this game version.
+Check `BepInEx\LogOutput.log` for `===== Brewing Hub 0.3.1 started`. A line starting with `could not` means part of the mod does not work on this game version.
 
 ## Known issues
 
-- The "Brew again when collected" switch is not saved: it turns off when you leave the game.
-- The Barrels tab can collect a finished barrel but cannot fill or start one; open that barrel to do so.
+- The "Brew again when collected" switch is not saved, so it turns off when you leave the game.
+- The Barrels tab can collect a finished barrel but cannot fill or start one. Open the barrel for that.
 
 ## Feedback and bug reports
 
 Found a bug, have an idea, or something feels off? Come say so on the Core Directive Discord: https://discord.gg/trTsyxUFqg . When reporting a bug, attach `BepInEx\LogOutput.log` and, if you turned on `LogToFile`, `BepInEx\brewing-hub.log`.
 
-To reach me directly, message `exiled.dev` on Discord; you can find me in the [official Survival Log Discord](https://discord.gg/MZGg4gQAUe). I'm also on X as [@AnExiledDev](https://x.com/AnExiledDev).
+To reach me directly, message `exiled.dev` on Discord. You can find me in the [official Survival Log Discord](https://discord.gg/MZGg4gQAUe). I'm also on X as [@AnExiledDev](https://x.com/AnExiledDev).
 
 Check out my [Survival Log wiki](https://sldb.core-directive.com/en/) for items, crafting, maps and more.
 
