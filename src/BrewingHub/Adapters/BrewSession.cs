@@ -220,6 +220,15 @@ internal sealed class BrewSession
     private int? TierOf(Cellar cellar, Barrel barrel) =>
         (barrel.State != BarrelState.Idle ? cellar.Catalog.TierOf(barrel.ResultItemId) : null) ?? (_lastTier.TryGetValue(barrel.FurnitureId, out var tier) ? tier : null);
 
+    /// <summary>Called on the main thread when a load or a trip gives the barrels new ids, so each switch stays on its barrel.</summary>
+    public void Follow(IReadOnlyDictionary<long, long> map)
+    {
+        IdMoves.Follow(_again, map);
+        IdMoves.Follow(_lastTier, map, (tier, _) => tier);
+        IdMoves.Follow(_seen, map, (barrel, id) => barrel with { FurnitureId = id });
+        ForgetSent();
+    }
+
     private void ForgetSent()
     {
         _feed.Forget();

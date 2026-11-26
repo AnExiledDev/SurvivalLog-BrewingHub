@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.3
+
+- A barrel set to "Brew again when collected" keeps the switch after you load a save or go on an expedition. Before, the switch stopped working, because the game gives every barrel a new id then.
+- Made for Survival Log 1.1.21671.
+
 ## 0.3.2
 
 - The search box on the Ingredients tab no longer hides every food when a space is typed before or after the name.

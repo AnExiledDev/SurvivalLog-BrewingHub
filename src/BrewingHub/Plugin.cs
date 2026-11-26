@@ -2,7 +2,9 @@ using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using BrewingHub.Adapters;
 using ExiledToolkit;
+using ExiledToolkit.Game;
 using ExiledToolkit.Kit;
+using HarmonyLib;
 
 namespace BrewingHub;
 
@@ -12,7 +14,7 @@ namespace BrewingHub;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.brewinghub";
-    private const string Version = "0.3.2";
+    private const string Version = "0.3.3";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and UI size all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
@@ -59,6 +61,8 @@ public sealed class Plugin : BasePlugin
             session.UseSettings(isSpoilingFirst.Value, isPuttingAway.Value);
             log.Write($"spoiling first {isSpoilingFirst.Value}, put bottles away {isPuttingAway.Value}");
         }, isSpoilingFirst, isPuttingAway);
+
+        IdFollow.Apply(new PatchKit(new Harmony(Guid), log.Write), session);
 
         BrewTicker.Session = session;
         BrewTicker.Log = log.Write;
